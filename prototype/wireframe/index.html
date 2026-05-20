@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>After Class — Wireframe</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #e8e8e8;
+      color: #111;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 80px;
+    }
+    h1.page-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 20px;
+      text-align: center;
+      max-width: 360px;
+    }
+    .phone {
+      width: 100%;
+      max-width: 390px;
+      min-height: 720px;
+      background: #fff;
+      border: 2px solid #111;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .status-bar {
+      height: 44px;
+      border-bottom: 1px dashed #bbb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #999;
+      flex-shrink: 0;
+    }
+    .screen {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      padding: 20px 16px 16px;
+      overflow-y: auto;
+    }
+    .screen.active { display: flex; }
+    .screen-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #888;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+    .wf-title {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .wf-body {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #444;
+      margin-bottom: 16px;
+    }
+    .box {
+      border: 1px solid #111;
+      background: #f5f5f5;
+      margin-bottom: 12px;
+    }
+    .box-photo {
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #888;
+    }
+    .box-input {
+      height: 44px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      font-size: 13px;
+      color: #666;
+    }
+    .box-card {
+      padding: 14px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .box-card strong { display: block; margin-bottom: 4px; font-size: 14px; }
+    .row { display: flex; gap: 10px; margin-bottom: 12px; }
+    .row .box { flex: 1; margin-bottom: 0; }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .chip {
+      border: 1px solid #111;
+      padding: 8px 12px;
+      font-size: 12px;
+      background: #fff;
+    }
+    .chip.selected { background: #ddd; }
+    .btn {
+      border: 2px solid #111;
+      background: #fff;
+      padding: 14px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      margin-top: auto;
+      width: 100%;
+    }
+    .btn-primary { background: #111; color: #fff; }
+    .btn-ghost { background: #fff; color: #111; margin-top: 8px; }
+    .btn-group { margin-top: auto; display: flex; flex-direction: column; gap: 0; }
+    .swipe-actions {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-top: 16px;
+      padding: 16px 0;
+    }
+    .swipe-btn {
+      width: 56px;
+      height: 56px;
+      border: 2px solid #111;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #fff;
+    }
+    .nav-bar {
+      display: flex;
+      border-top: 1px solid #111;
+      margin-top: auto;
+      flex-shrink: 0;
+    }
+    .nav-item {
+      flex: 1;
+      text-align: center;
+      padding: 12px 4px;
+      font-size: 10px;
+      border-right: 1px solid #ddd;
+      color: #666;
+    }
+    .nav-item:last-child { border-right: none; }
+    .nav-item.active { font-weight: 700; color: #111; background: #eee; }
+    .expire-banner {
+      border: 2px solid #111;
+      padding: 10px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 16px;
+      background: #f0f0f0;
+    }
+    .timeline {
+      border-left: 2px solid #111;
+      margin: 12px 0 16px 8px;
+      padding-left: 16px;
+    }
+    .timeline-item {
+      font-size: 12px;
+      margin-bottom: 10px;
+      color: #444;
+    }
+    .timeline-item::before {
+      content: "○";
+      margin-left: -24px;
+      margin-right: 8px;
+      font-size: 10px;
+    }
+    .review-options {
+      display: flex;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .review-btn {
+      flex: 1;
+      border: 2px solid #111;
+      padding: 24px 12px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #fff;
+    }
+    .controls {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-top: 2px solid #111;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      max-width: 100%;
+    }
+    .controls button {
+      border: 1px solid #111;
+      background: #fff;
+      padding: 8px 16px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .controls select {
+      flex: 1;
+      max-width: 220px;
+      padding: 8px;
+      border: 1px solid #111;
+      font-size: 12px;
+    }
+    .screen-index {
+      font-size: 12px;
+      color: #666;
+      min-width: 48px;
+      text-align: center;
+    }
+    .note {
+      font-size: 11px;
+      color: #888;
+      font-style: italic;
+      margin-top: 8px;
+    }
+    .list-plain {
+      list-style: none;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #444;
+    }
+    .list-plain li { margin-bottom: 6px; padding-left: 12px; border-left: 2px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h1 class="page-title">After Class</h1>
+  <p class="subtitle">Grayscale wireframe · MVP flow · Open in browser</p>
+
+  <div class="phone" id="phone">
+    <div class="status-bar">status bar</div>
+
+    <!-- 1 Welcome -->
+    <section class="screen active" data-screen="welcome" data-label="1 · Welcome">
+      <div class="screen-label">Screen 1 — Welcome</div>
+      <div class="box box-photo" style="height:200px;margin-bottom:20px">logo / hero</div>
+      <p class="wf-title">After Class</p>
+      <p class="wf-body">Verified campus dating. Meet in public, daytime.</p>
+      <div class="btn-group">
+        <button class="btn btn-primary" data-next="age">Get started</button>
+        <button class="btn btn-ghost" data-next="age">Log in</button>
+      </div>
+    </section>
+
+    <!-- 2 Age gate -->
+    <section class="screen" data-screen="age" data-label="2 · Age gate">
+      <div class="screen-label">Screen 2 — Age gate</div>
+      <p class="wf-title">Are you 18 or older?</p>
+      <p class="wf-body">You must be at least 18 to use After Class.</p>
+      <div class="btn-group">
+        <button class="btn btn-primary" data-next="edu">Yes, I'm 18+</button>
+        <button class="btn btn-ghost">No</button>
+      </div>
+    </section>
+
+    <!-- 3 Edu email -->
+    <section class="screen" data-screen="edu" data-label="3 · .edu email">
+      <div class="screen-label">Screen 3 — School email</div>
+      <p class="wf-title">Verify your school</p>
+      <p class="wf-body">Enter your active student .edu email. We'll send a verification code.</p>
+      <div class="box box-input">you@university.edu</div>
+      <p class="note">Domain must be on approved school list</p>
+      <div class="btn-group">
+        <button class="btn btn-primary" data-next="verify">Send verification</button>
+      </div>
+    </section>
+
+    <!-- 4 Verify -->
+    <section class="screen" data-screen="verify" data-label="4 · Verify email">
+      <div class="screen-label">Screen 4 — Check email</div>
+      <p class="wf-title">Check your inbox</p>
+      <p class="wf-body">We sent a code to you@university.edu</p>
+      <div class="row">
+        <div class="box box-input">_</div>
+        <div class="box box-input">_</div>
+        <div class="box box-input">_</div>
+        <div class="box box-input">_</div>
+        <div class="box box-input">_</div>
+        <div class="box box-input">_</div>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary" data-next="profile">Verify & continue</button>
+        <button class="btn btn-ghost">Resend code</button>
+      </div>
+    </section>
+
+    <!-- 5 Profile -->
+    <section class="screen" data-screen="profile" data-label="5 · Profile setup">
+      <div class="screen-label">Screen 5 — Profile (minimal)</div>
+      <p class="wf-title">Build your profile</p>
+      <div class="row">
+        <div class="box box-photo" style="height:80px;flex:1">photo</div>
+        <div class="box box-photo" style="height:80px;flex:1">photo</div>
+        <div class="box box-photo" style="height:80px;flex:1">+</div>
+      </div>
+      <div class="box box-input">Display name</div>
+      <div class="box box-input">Age</div>
+      <div class="box box-input">School (auto from email)</div>
+      <div class="box box-input">Bio</div>
+      <div class="btn-group">
+        <button class="btn btn-primary" data-next="area">Continue</button>
+      </div>
+    </section>
+
+    <!-- 6 Area + radius -->
+    <section class="screen" data-screen="area" data-label="6 · Area & radius">
+      <div class="screen-label">Screen 6 — Where you are</div>
+      <p class="wf-title">Approximate area</p>
+      <p class="wf-body">Pick a campus zone or neighborhood — not your home address.</p>
+      <div class="box box-input">Search area… e.g. North Campus</div>
+      <p class="wf-body" style="margin-top:16px">Max travel radius for meetups</p>
+      <div class="chip-row">
+        <span class="chip">2 km</span>
+        <span class="chip">5 km</span>
+        <span class="chip selected">10 km</span>
+        <span class="chip">15 km</span>
+        <span class="chip">20 km</span>
+        <span class="chip">30 km</span>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary" data-next="swipe">Start browsing</button>
+      </div>
+    </section>
+
+    <!-- 7 Swipe -->
+    <section class="screen" data-screen="swipe" data-label="7 · Discovery">
+      <div class="screen-label">Screen 7 — Discovery / swipe</div>
+      <div class="box box-photo">
+        <div style="text-align:center">
+          <div style="font-weight:700;margin-bottom:8px">Alex, 21</div>
+          <div>State University</div>
+          <div style="margin-top:8px;font-size:11px;color:#888">Strong · school compatibility</div>
+        </div>
+      </div>
+      <div class="swipe-actions">
+        <button class="swipe-btn" data-next="swipe" title="Pass">PASS</button>
+        <button class="swipe-btn" data-next="match" title="Like">LIKE</button>
+      </div>
+      <div class="nav-bar">
+        <div class="nav-item active">Discover</div>
+        <div class="nav-item">Matches</div>
+        <div class="nav-item">Profile</div>
+      </div>
+    </section>
+
+    <!-- 8 Match -->
+    <section class="screen" data-screen="match" data-label="8 · Match">
+      <div class="screen-label">Screen 8 — It's a match</div>
+      <div class="box box-photo" style="height:160px">both avatars</div>
+      <p class="wf-title" style="text-align:center">It's a match!</p>
+      <p class="wf-body" style="text-align:center">You and Alex liked each other.</p>
+      <p class="note" style="text-align:center">Chat is locked until meetup step completes</p>
+      <div class="btn-group">
+        <button class="btn btn-primary" data-next="meetup">See meetup plan</button>
+      </div>
+    </section>
+
+    <!-- 9 Meetup proposal (hero) -->
+    <section class="screen" data-screen="meetup" data-label="9 · Meetup proposal">
+      <div class="screen-label">Screen 9 — Meetup proposal (no chat yet)</div>
+      <div class="expire-banner">Match expires in 47:59:12</div>
+      <p class="wf-title">Let's meet up</p>
+      <p class="wf-body">Oh hey — you both said you're open to meeting. Here's what we found:</p>
+      <div class="box box-card">
+        <strong>Your overlap</strong>
+        You both set a <strong>10 km</strong> radius. You're both available for a <strong>daytime</strong> meetup (8 AM – 6 PM).
+      </div>
+      <div class="box box-card">
+        <strong>Midpoint</strong>
+        Between your areas → <strong>University District</strong>
+      </div>
+      <div class="box box-card">
+        <strong>Suggested meetup</strong>
+        Campus Coffee House<br />
+        Sat · 2:30 PM
+      </div>
+      <p class="wf-body">Pick a time or alternate spot before the match expires.</p>
+      <div class="chip-row">
+        <span class="chip selected">Sat 2:30 PM</span>
+        <span class="chip">Sat 11:00 AM</span>
+        <span class="chip">Sun 4:00 PM</span>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary" data-next="meetup-confirm">Accept meetup</button>
+        <button class="btn btn-ghost">See alternate venues</button>
+        <button class="btn btn-ghost" data-next="meetup-expired">Skip — let expire</button>
+      </div>
+      <p class="note">Chat unlocks after both accept or meetup window ends</p>
+    </section>
+
+    <!-- 10 Meetup confirmed -->
+    <section class="screen" data-screen="meetup-confirm" data-label="10 · Meetup confirmed">
+      <div class="screen-label">Screen 10 — Meetup confirmed</div>
+      <p class="wf-title">You're set</p>
+      <p class="wf-body">Both accepted. Meet at Campus Coffee House, Sat 2:30 PM.</p>
+      <div class="box box-card">
+        <strong>Reminder</strong>
+        Public venue · daytime · bring a friend if you want
+      </div>
+      <div class="timeline">
+        <div class="timeline-item">Now — plan saved</div>
+        <div class="timeline-item">Sat 2:30 PM — meetup time</div>
+        <div class="timeline-item">After — rate your experience</div>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary" data-next="review">After meetup → Review</button>
+        <button class="btn btn-ghost" data-next="chat">Open chat (demo)</button>
+      </div>
+    </section>
+
+    <!-- 11 Review -->
+    <section class="screen" data-screen="review" data-label="11 · Post-meetup review">
+      <div class="screen-label">Screen 11 — Experience review</div>
+      <p class="wf-title">How was it?</p>
+      <p class="wf-body">Quick feedback after your meetup with Alex. This helps improve suggestions — not a public review.</p>
+      <div class="review-options">
+        <button class="review-btn" data-next="review-done">Cool</button>
+        <button class="review-btn" data-next="review-done">Not cool</button>
+      </div>
+      <div class="box box-input">Optional: what went well or poorly?</div>
+      <div class="btn-group">
+        <button class="btn btn-primary" data-next="review-done">Submit</button>
+        <button class="btn btn-ghost" data-next="review-done">Skip</button>
+      </div>
+    </section>
+
+    <!-- 12 Review done -->
+    <section class="screen" data-screen="review-done" data-label="12 · Review thanks">
+      <div class="screen-label">Screen 12 — Thanks</div>
+      <p class="wf-title">Thanks for the feedback</p>
+      <p class="wf-body">Your input improves venue picks and compatibility signals.</p>
+      <div class="btn-group">
+        <button class="btn btn-primary" data-next="swipe">Back to discover</button>
+        <button class="btn btn-ghost" data-next="chat">Message Alex (optional)</button>
+      </div>
+    </section>
+
+    <!-- 13 Chat (post-flow, PRD) -->
+    <section class="screen" data-screen="chat" data-label="13 · Chat (unlocked)">
+      <div class="screen-label">Screen 13 — Chat (after meetup flow)</div>
+      <div class="box box-card" style="margin-bottom:12px">
+        <strong>Meetup</strong>
+        Campus Coffee House · Sat 2:30 PM
+      </div>
+      <div class="box box-photo" style="height:320px;align-items:flex-end;padding:12px">
+        <div style="width:100%">
+          <div class="box box-card" style="width:70%;margin-bottom:8px">Hey, see you Saturday?</div>
+          <div class="box box-card" style="width:65%;margin-left:auto;background:#eee">Sounds good!</div>
+        </div>
+      </div>
+      <div class="box box-input">Message…</div>
+      <div class="nav-bar">
+        <div class="nav-item">Discover</div>
+        <div class="nav-item active">Matches</div>
+        <div class="nav-item">Profile</div>
+      </div>
+    </section>
+
+    <!-- 14 Match expired -->
+    <section class="screen" data-screen="meetup-expired" data-label="14 · Match expired">
+      <div class="screen-label">Screen 14 — Match expired</div>
+      <p class="wf-title">Match expired</p>
+      <p class="wf-body">No one confirmed a meetup in time. This match is closed.</p>
+      <div class="btn-group">
+        <button class="btn btn-primary" data-next="swipe">Keep browsing</button>
+      </div>
+    </section>
+
+    <!-- 15 No venue (PRD edge case) -->
+    <section class="screen" data-screen="no-venue" data-label="15 · No venue">
+      <div class="screen-label">Screen 15 — No shared venue (edge)</div>
+      <p class="wf-title">No meetup spot in range</p>
+      <p class="wf-body">We couldn't find a curated public venue within both of your radii.</p>
+      <ul class="list-plain">
+        <li>Increase your travel radius</li>
+        <li>Wait for chat after partner accepts widen</li>
+      </ul>
+      <div class="btn-group">
+        <button class="btn btn-primary">Widen radius</button>
+        <button class="btn btn-ghost" data-next="meetup-expired">Let match expire</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="controls">
+    <button type="button" id="prev">← Prev</button>
+    <span class="screen-index" id="index">1 / 15</span>
+    <select id="jump" aria-label="Jump to screen"></select>
+    <button type="button" id="next">Next →</button>
+  </div>
+
+  <script>
+    const screens = [...document.querySelectorAll(".screen")];
+    const order = screens.map((s) => s.dataset.screen);
+    const jump = document.getElementById("jump");
+    const indexEl = document.getElementById("index");
+    let current = 0;
+
+    order.forEach((id, i) => {
+      const opt = document.createElement("option");
+      opt.value = id;
+      opt.textContent = screens[i].dataset.label || id;
+      jump.appendChild(opt);
+    });
+
+    function show(screenId) {
+      const idx = order.indexOf(screenId);
+      if (idx === -1) return;
+      current = idx;
+      screens.forEach((s, i) => s.classList.toggle("active", i === idx));
+      jump.value = screenId;
+      indexEl.textContent = `${idx + 1} / ${order.length}`;
+    }
+
+    function step(delta) {
+      const next = (current + delta + order.length) % order.length;
+      show(order[next]);
+    }
+
+    document.getElementById("prev").onclick = () => step(-1);
+    document.getElementById("next").onclick = () => step(1);
+    jump.onchange = () => show(jump.value);
+
+    document.querySelectorAll("[data-next]").forEach((el) => {
+      el.addEventListener("click", () => show(el.dataset.next));
+    });
+
+    show("welcome");
+  </script>
+</body>
+</html>

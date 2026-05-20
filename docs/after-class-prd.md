@@ -98,14 +98,96 @@ The primary user is an active college or university student, age 18 or older, wh
 
 1. When a match is created, the app computes the feasible venue set using both users' approximate areas, both travel radii, venue operating hours, and the daytime scheduling window.
 2. The app proposes one primary venue near the midpoint plus up to two alternates, along with three suggested daytime slots between 8:00 AM and 6:00 PM local time.
-3. Either user may accept the primary suggestion, choose an alternate, request a different slot, or move into chat to coordinate details.
-4. If no venue exists that respects both radii and safety rules, the app clearly says so and prompts users to enlarge radius or continue in chat instead of fabricating an invalid suggestion.
+3. Either user may accept the primary suggestion, choose an alternate, request a different slot, or allow the match to expire if they do not want to proceed.
+4. If no venue exists that respects both radii and safety rules, the app clearly says so and prompts users to enlarge radius or let the match expire instead of fabricating an invalid suggestion.
+5. The meetup proposal screen must show a visible match expiration countdown; if the timer elapses without a mutually accepted plan, the match closes.
 
 ### Journey 4: Safety actions
 
 1. A user can block or report another user from the profile, match screen, or chat screen.
 2. The report captures reason codes, optional details, and relevant context such as the triggering message or profile.
 3. Admin moderators review queued reports and can warn, restrict, or remove offending accounts.
+
+### Journey 5: Post-meetup review
+
+1. After the scheduled meetup time passes (or both users mark the meetup as completed), each user is prompted for lightweight experience feedback.
+2. The prompt asks whether the experience felt positive ("cool") or negative ("not cool"), with optional free-text detail.
+3. Feedback is private, used for product quality and safety signals, and must not be shown as a public rating on the other user's profile in MVP.
+4. Users may skip the review; skipping must not block returning to discovery or messaging an existing match.
+
+## UX Flow and Wireframes
+
+This section captures the **founder wireframe flow** (v1) and maps it to screens. A grayscale interactive wireframe lives at `prototype/wireframe/index.html`.
+
+### Design intent (wireframe phase)
+
+- **No visual brand yet** — structure, copy hierarchy, and screen order only (grayscale boxes).
+- **Chat is not the first post-match action** — the meetup proposal screen is the hero; chat unlocks after the meetup step is resolved or the match expires.
+- **Urgency** — matches that do not progress toward a meetup plan expire on a countdown timer.
+
+### Primary happy path (student app)
+
+| Step | Screen | What happens |
+|------|--------|----------------|
+| 1 | Welcome | Standard app entry; sign up or log in. |
+| 2 | Age gate | User confirms 18+. |
+| 3 | School email | User enters approved `.edu` email. |
+| 4 | Verify email | Code or magic link confirmation. |
+| 5 | Profile setup | Photos, name, age, school (auto), bio. |
+| 6 | Area and radius | Approximate area + max travel radius (default 10 km). |
+| 7 | Discovery / swipe | Swipe left (pass) or right (like); school context on card. |
+| 8 | Match | Brief celebration; CTA to meetup plan (not chat). |
+| 9 | Meetup proposal | See copy pattern below; pick slot; accept or alternates; countdown visible. |
+| 10 | Meetup confirmed | Both accepted; reminder of venue and time. |
+| 11 | Post-meetup review | "Cool" or "Not cool" plus optional note. |
+| 12 | Thanks / continue | Return to discovery or open chat if match still active. |
+
+### Meetup proposal screen — voice and content (founder spec)
+
+When two users match, the app speaks **as the product** (concierge tone), summarizing overlap before suggesting a plan:
+
+> Oh hey — you both said you're open to meeting. You both set a **[X] km** radius. You're both available for a **daytime** meetup. Your midpoint is **[area label]**. I'm suggesting you meet at **[venue]** at **[time]**. **This match expires in [countdown].**
+
+Supporting UI on the same screen:
+
+- Primary venue + up to two alternates (from PRD meetup engine).
+- Three daytime slot chips (8:00 AM–6:00 PM).
+- Actions: accept meetup, see alternates, let match expire.
+- **No chat composer** on this screen in MVP wireframe.
+
+### Match expiration (founder spec)
+
+- Every new match starts a **visible expiration countdown** on the meetup proposal screen.
+- If neither user accepts a meetup plan before the timer ends, the match moves to an **expired** state and is closed for new coordination.
+- Default expiration window for MVP wireframe: **48 hours** from match creation (product default; engineering may tune).
+- Expired matches do not surface in active match lists; users return to discovery.
+
+### Post-meetup review (founder spec)
+
+- Trigger: after scheduled meetup time **or** explicit "we met" / meetup-completed action by either user.
+- Question: **"How was it?"** with two taps: **Cool** / **Not cool**.
+- Optional short text field; skip allowed.
+- Used for internal quality and safety analytics, not public reviews.
+
+### Chat unlock rules (wireframe + PRD)
+
+| State | Chat |
+|-------|------|
+| Match just created | Locked — meetup proposal first |
+| Both accepted meetup | Unlocked — coordination and meetup context pinned |
+| Match expired | Locked / thread archived |
+| After review | Unlocked if match still active |
+
+### Edge screens (from PRD, in wireframe)
+
+- **No shared venue** — both radii exclude all curated venues; offer widen radius or expire.
+- **Report / block** — available from profile, match, and chat (not wireframed in v1 HTML).
+
+### Wireframe artifact
+
+- Path: `prototype/wireframe/index.html`
+- Format: single-file HTML, mobile frame, prev/next navigation
+- Screens: 15 (includes edge cases)
 
 ## Functional Requirements
 
@@ -142,7 +224,9 @@ The primary user is an active college or university student, age 18 or older, wh
 - FR-MAT-1: Mutual likes create a match immediately.
 - FR-MAT-2: Match creation must emit analytics events for school-pair aggregation and post-match funnel tracking.
 - FR-MAT-3: The first post-match screen must emphasize the meetup suggestion flow rather than an empty chat composer.
-- FR-MAT-4: Users may still access chat after the meetup suggestion is displayed, but chat is positioned as a coordination tool rather than the default first move.
+- FR-MAT-4: Chat must remain locked on the first post-match screen; users cannot open a message composer until the meetup step is accepted by both parties or the match expires per product policy.
+- FR-MAT-5: Every match must display a countdown until expiration on the meetup proposal screen. The MVP default expiration window is 48 hours from match creation unless changed by product policy.
+- FR-MAT-6: When a match expires without a mutually accepted meetup plan, the match must move to an expired state, disappear from active match lists, and stop new chat messages.
 
 ### Meetup recommendation engine
 
@@ -162,10 +246,16 @@ The primary user is an active college or university student, age 18 or older, wh
 ### Messaging
 
 - FR-CHAT-1: The MVP must support one-to-one text chat for matched users.
-- FR-CHAT-2: Chat becomes available immediately after the meetup suggestion screen is shown.
+- FR-CHAT-2: Chat becomes available only after both users accept a meetup plan or after the match expires per FR-MAT-6; the meetup suggestion screen alone must not unlock chat.
 - FR-CHAT-3: Messaging is intended for coordination and rapport, so advanced features such as voice, video, disappearing media, and group chat are out of scope.
 - FR-CHAT-4: Users must be able to block or report from inside chat.
 - FR-CHAT-5: Chat should preserve the meetup context by showing the current suggested venue and slot near the top of the thread or match detail view.
+
+### Post-meetup review
+
+- FR-REV-1: After a scheduled meetup time passes or a user marks the meetup complete, the app must prompt each user for private experience feedback with at least two options: positive ("cool") and negative ("not cool").
+- FR-REV-2: Users may add optional short text and may skip the review without losing access to discovery or an still-active match thread.
+- FR-REV-3: Review responses must not be displayed as public profile ratings in MVP; they feed internal analytics, safety review, and product quality only.
 
 ### School compatibility insights
 
