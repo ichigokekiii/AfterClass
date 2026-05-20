@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>After Class — Wireframe</title>
+  <style>
+    :root {
+      --bg: #f4f4f5;
+      --surface: #fff;
+      --border: #d4d4d8;
+      --text: #18181b;
+      --muted: #71717a;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --danger: #dc2626;
+      --radius: 12px;
+      --phone-w: 390px;
+      --phone-h: 844px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #e4e4e7;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 32px;
+    }
+
+    .page-header {
+      max-width: 900px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .page-header h1 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .page-header p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .layout {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .phone {
+      width: var(--phone-w);
+      height: var(--phone-h);
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 28px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 32px rgba(0,0,0,.08);
+      flex-shrink: 0;
+    }
+
+    .status-bar {
+      height: 44px;
+      padding: 12px 20px 0;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .screen {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 20px 20px;
+      display: none;
+      flex-direction: column;
+    }
+
+    .screen.active { display: flex; }
+
+    .screen-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .screen-sub {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-bottom: 20px;
+    }
+
+    .label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .input, .select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius);
+      font-size: 0.9375rem;
+      background: var(--bg);
+      margin-bottom: 14px;
+      color: var(--muted);
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      margin-top: 8px;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    .checkbox-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px;
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      font-size: 0.875rem;
+      line-height: 1.4;
+    }
+
+    .checkbox-box {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .photo-slot {
+      aspect-ratio: 3/4;
+      background: var(--bg);
+      border: 1.5px dashed var(--border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .chip {
+      padding: 8px 14px;
+      border: 1.5px dashed var(--border);
+      border-radius: 999px;
+      font-size: 0.8125rem;
+      color: var(--muted);
+      background: var(--bg);
+    }
+
+    .chip.selected {
+      border-style: solid;
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* Discovery card */
+    .card-stack {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .discovery-card {
+      flex: 1;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 420px;
+    }
+
+    .card-photo {
+      flex: 1;
+      background: linear-gradient(180deg, #e4e4e7 0%, #d4d4d8 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .card-info {
+      padding: 16px;
+      border-top: 1.5px solid var(--border);
+    }
+
+    .card-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .card-school {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .compat-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    .card-bio {
+      font-size: 0.8125rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .swipe-actions {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      padding: 16px 0 8px;
+    }
+
+    .swipe-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--surface);
+      font-size: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .swipe-btn.like { border-color: var(--accent); color: var(--accent); }
+
+    /* Meetup */
+    .match-banner {
+      text-align: center;
+      padding: 12px 0 16px;
+    }
+
+    .match-banner h2 {
+      font-size: 1.375rem;
+      margin-bottom: 4px;
+    }
+
+    .venue-card {
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 12px;
+      background: var(--accent-soft);
+    }
+
+    .venue-card.alt {
+      border-style: dashed;
+      border-color: var(--border);
+      background: var(--bg);
+    }
+
+    .venue-card h3 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .venue-card p {
+      font-size: 0.8125rem;
+      color: var(--muted);
+    }
+
+    .venue-tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .slot-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .slot {
+      padding: 12px 14px;
+      border: 1.5px dashed var(--border);
+      border-radius: 10px;
+      font-size: 0.875rem;
+      text-align: center;
+      cursor: pointer;
+      background: var(--bg);
+    }
+
+    .slot.selected {
+      border-style: solid;
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      font-weight: 600;
+    }
+
+    .alert-box {
+      padding: 14px;
+      border: 1.5px dashed var(--danger);
+      border-radius: var(--radius);
+      background: #fef2f2;
+      font-size: 0.875rem;
+      line-height: 1.45;
+      margin-bottom: 16px;
+      color: #991b1b;
+    }
+
+    /* Chat */
+    .meetup-context {
+      padding: 12px;
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      margin-bottom: 16px;
+      font-size: 0.8125rem;
+    }
+
+    .meetup-context strong { display: block; margin-bottom: 4px; }
+
+    .messages {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+      min-height: 200px;
+    }
+
+    .bubble {
+      max-width: 75%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 0.875rem;
+      line-height: 1.4;
+    }
+
+    .bubble.them {
+      align-self: flex-start;
+      background: var(--bg);
+      border: 1px solid var(--border);
+    }
+
+    .bubble.me {
+      align-self: flex-end;
+      background: var(--accent-soft);
+      border: 1px solid var(--accent);
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1.5px dashed var(--border);
+      border-radius: 999px;
+      font-size: 0.875rem;
+      background: var(--bg);
+      color: var(--muted);
+    }
+
+    /* Nav */
+    .bottom-nav {
+      display: flex;
+      border-top: 1.5px solid var(--border);
+      padding: 8px 0 20px;
+      flex-shrink: 0;
+    }
+
+    .nav-item {
+      flex: 1;
+      text-align: center;
+      font-size: 0.65rem;
+      color: var(--muted);
+      padding: 8px 4px;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    .nav-item.active { color: var(--accent); font-weight: 600; }
+
+    .nav-icon {
+      display: block;
+      font-size: 1.25rem;
+      margin-bottom: 2px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 0 12px;
+      min-height: 40px;
+    }
+
+    .back-btn {
+      border: none;
+      background: none;
+      font-size: 0.875rem;
+      color: var(--accent);
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .icon-btn {
+      border: none;
+      background: none;
+      font-size: 1.125rem;
+      cursor: pointer;
+      color: var(--muted);
+    }
+
+    /* Sidebar map */
+    .nav-map {
+      flex: 1;
+      min-width: 240px;
+      max-width: 320px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+
+    .nav-map h2 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-map button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 10px 12px;
+      margin-bottom: 4px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      font-size: 0.875rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .nav-map button:hover { background: var(--bg); }
+    .nav-map button.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .nav-map .section {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin: 12px 0 6px;
+      padding-left: 4px;
+    }
+
+    .wireframe-note {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 16px;
+      line-height: 1.4;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .progress-dots {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .dot.active { background: var(--accent); }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.4);
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: var(--phone-w);
+      background: var(--surface);
+      border-radius: 16px 16px 0 0;
+      padding: 20px;
+    }
+
+    .modal-sheet h3 { margin-bottom: 12px; font-size: 1.125rem; }
+
+    .modal-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <h1>After Class — Wireframe mockup</h1>
+    <p>Simple clickable prototype based on the PRD. Open this file in a browser. Use the screen map on the right or buttons inside the phone.</p>
+  </header>
+
+  <div class="layout">
+    <div class="phone" id="phone">
+      <div class="status-bar">
+        <span>9:41</span>
+        <span>After Class</span>
+      </div>
+
+      <!-- 1. Welcome -->
+      <div class="screen active" data-screen="welcome">
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:20px 0;">
+          <div style="width:80px;height:80px;border:2px dashed var(--border);border-radius:20px;margin:0 auto 24px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:var(--muted);">Logo</div>
+          <h1 class="screen-title" style="font-size:1.75rem;">After Class</h1>
+          <p class="screen-sub" style="margin-bottom:32px;">Verified campus dating.<br>Meet in public, daytime.</p>
+        </div>
+        <button class="btn btn-primary" data-go="age-gate">Get started</button>
+        <button class="btn btn-ghost">Already have an account? Sign in</button>
+      </div>
+
+      <!-- 2. Age gate -->
+      <div class="screen" data-screen="age-gate">
+        <h1 class="screen-title">Confirm your age</h1>
+        <p class="screen-sub">You must be 18 or older to use After Class.</p>
+        <label class="checkbox-row">
+          <div class="checkbox-box"></div>
+          <span>I confirm I am at least 18 years old.</span>
+        </label>
+        <button class="btn btn-primary" data-go="verify-email">Continue</button>
+        <button class="btn btn-ghost" data-go="welcome">Back</button>
+      </div>
+
+      <!-- 3. Email verify -->
+      <div class="screen" data-screen="verify-email">
+        <div class="progress-dots"><span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <h1 class="screen-title">School email</h1>
+        <p class="screen-sub">Enter your active student .edu address. We'll verify your school.</p>
+        <p class="label">Email</p>
+        <div class="input">alex@university.edu</div>
+        <button class="btn btn-primary" data-go="verify-code">Send verification code</button>
+        <button class="btn btn-ghost" data-go="age-gate">Back</button>
+      </div>
+
+      <!-- 4. Code -->
+      <div class="screen" data-screen="verify-code">
+        <div class="progress-dots"><span class="dot active"></span><span class="dot active"></span><span class="dot"></span><span class="dot"></span></div>
+        <h1 class="screen-title">Check your inbox</h1>
+        <p class="screen-sub">We sent a code to alex@university.edu</p>
+        <p class="label">6-digit code</p>
+        <div class="input">● ● ● ● ● ●</div>
+        <p style="font-size:0.8rem;color:var(--muted);margin-bottom:16px;">School detected: <strong>State University</strong> (auto from domain)</p>
+        <button class="btn btn-primary" data-go="profile-photos">Verify & continue</button>
+      </div>
+
+      <!-- 5. Photos -->
+      <div class="screen" data-screen="profile-photos">
+        <div class="progress-dots"><span class="dot active"></span><span class="dot active"></span><span class="dot active"></span><span class="dot"></span></div>
+        <h1 class="screen-title">Add photos</h1>
+        <p class="screen-sub">3–6 photos. First photo is your main card image.</p>
+        <div class="photo-grid">
+          <div class="photo-slot">+ Main</div>
+          <div class="photo-slot">+</div>
+          <div class="photo-slot">+</div>
+          <div class="photo-slot">+</div>
+          <div class="photo-slot">+</div>
+          <div class="photo-slot">+</div>
+        </div>
+        <button class="btn btn-primary" data-go="profile-details">Continue</button>
+      </div>
+
+      <!-- 6. Profile details -->
+      <div class="screen" data-screen="profile-details">
+        <div class="progress-dots"><span class="dot active"></span><span class="dot active"></span><span class="dot active"></span><span class="dot active"></span></div>
+        <h1 class="screen-title">About you</h1>
+        <p class="screen-sub">School is set from your verified email.</p>
+        <p class="label">Display name</p>
+        <div class="input">Alex</div>
+        <p class="label">Age</p>
+        <div class="input">21</div>
+        <p class="label">School</p>
+        <div class="input" style="opacity:.7;">State University (verified)</div>
+        <p class="label">Bio</p>
+        <div class="input" style="min-height:72px;">Coffee, hiking, econ major…</div>
+        <p class="label">Interests</p>
+        <div class="chip-row">
+          <span class="chip selected">Coffee</span>
+          <span class="chip selected">Hiking</span>
+          <span class="chip">Music</span>
+          <span class="chip">+ Add</span>
+        </div>
+        <button class="btn btn-primary" data-go="location">Continue</button>
+      </div>
+
+      <!-- 7. Location -->
+      <div class="screen" data-screen="location">
+        <h1 class="screen-title">Where are you usually?</h1>
+        <p class="screen-sub">Approximate area only — never your home address.</p>
+        <p class="label">Area</p>
+        <div class="input">North Campus / University District</div>
+        <p class="label">Max travel radius</p>
+        <div class="chip-row">
+          <span class="chip">2 km</span>
+          <span class="chip">5 km</span>
+          <span class="chip selected">10 km</span>
+          <span class="chip">15 km</span>
+          <span class="chip">20 km</span>
+          <span class="chip">30 km</span>
+        </div>
+        <button class="btn btn-primary" data-go="preferences">Continue</button>
+        <button class="btn btn-ghost" data-go="profile-details">Back</button>
+      </div>
+
+      <!-- 8. Preferences -->
+      <div class="screen" data-screen="preferences">
+        <h1 class="screen-title">Discovery preferences</h1>
+        <p class="screen-sub">Basic filters for MVP. Cross-school discovery is on by default.</p>
+        <p class="label">Age range</p>
+        <div class="input">19 – 24</div>
+        <p class="label">Show me</p>
+        <div class="chip-row">
+          <span class="chip selected">Women</span>
+          <span class="chip">Men</span>
+          <span class="chip">Everyone</span>
+        </div>
+        <button class="btn btn-primary" data-go="discovery">Start browsing</button>
+      </div>
+
+      <!-- 9. Discovery -->
+      <div class="screen" data-screen="discovery">
+        <div class="top-bar">
+          <span style="font-weight:700;font-size:1.125rem;">Discover</span>
+          <button class="icon-btn" type="button" aria-label="Filters">⚙</button>
+        </div>
+        <div class="card-stack">
+          <div class="discovery-card">
+            <div class="card-photo">[ Photo ]</div>
+            <div class="card-info">
+              <div class="card-name">Jordan, 22</div>
+              <div class="card-school">Riverside College · ~4 km away</div>
+              <span class="compat-badge">Strong compatibility</span>
+              <p class="card-bio">Directional insight from campus activity — not a guarantee.</p>
+            </div>
+          </div>
+          <div class="swipe-actions">
+            <button class="swipe-btn" type="button" title="Pass">✕</button>
+            <button class="swipe-btn like" type="button" title="Like" data-go="match">♥</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. Match -->
+      <div class="screen" data-screen="match">
+        <div class="match-banner">
+          <h2>It's a match!</h2>
+          <p class="screen-sub" style="margin:0;">You and Jordan liked each other.</p>
+        </div>
+        <p style="font-size:0.875rem;text-align:center;margin-bottom:16px;color:var(--muted);">Next: a daytime meetup suggestion (not chat first).</p>
+        <button class="btn btn-primary" data-go="meetup">See meetup suggestion</button>
+        <button class="btn btn-secondary" data-go="chat">Skip to chat</button>
+      </div>
+
+      <!-- 11. Meetup proposal -->
+      <div class="screen" data-screen="meetup">
+        <div class="top-bar">
+          <button class="back-btn" type="button" data-go="discovery">← Back</button>
+          <button class="icon-btn" type="button" data-open-modal="report">⋯</button>
+        </div>
+        <h1 class="screen-title" style="font-size:1.25rem;">Suggest a meetup</h1>
+        <p class="screen-sub">Public venue · daytime · 8 AM – 6 PM</p>
+
+        <p class="venue-tag">Primary suggestion</p>
+        <div class="venue-card">
+          <h3>Campus Grounds Café</h3>
+          <p>Cafe · ~2.1 km from midpoint · Open today</p>
+        </div>
+
+        <p class="label">Alternates</p>
+        <div class="venue-card alt">
+          <h3>Page & Pine Bookstore</h3>
+          <p>Bookstore · ~2.8 km</p>
+        </div>
+        <div class="venue-card alt">
+          <h3>Sweet Maple Dessert</h3>
+          <p>Dessert · ~3.0 km</p>
+        </div>
+
+        <p class="label">Pick a time</p>
+        <div class="slot-row">
+          <div class="slot selected">Today · 11:30 AM</div>
+          <div class="slot">Tomorrow · 2:00 PM</div>
+          <div class="slot">Sat · 4:30 PM</div>
+        </div>
+
+        <button class="btn btn-primary" data-go="chat">Accept suggestion</button>
+        <button class="btn btn-secondary" data-go="chat">Open chat to adjust</button>
+      </div>
+
+      <!-- 12. No venue -->
+      <div class="screen" data-screen="no-venue">
+        <div class="top-bar">
+          <button class="back-btn" type="button" data-go="match">← Back</button>
+        </div>
+        <h1 class="screen-title">No shared venue</h1>
+        <p class="screen-sub">We couldn't find a curated public spot within both travel radii.</p>
+        <div class="alert-box">
+          Try enlarging your radius or continue in chat to coordinate manually. We won't suggest bars, private locations, or night slots.
+        </div>
+        <button class="btn btn-primary" data-go="location">Adjust travel radius</button>
+        <button class="btn btn-secondary" data-go="chat">Continue in chat</button>
+      </div>
+
+      <!-- 13. Chat -->
+      <div class="screen" data-screen="chat">
+        <div class="top-bar">
+          <button class="back-btn" type="button" data-go="meetup">← Jordan</button>
+          <button class="icon-btn" type="button" data-open-modal="report">⋯</button>
+        </div>
+        <div class="meetup-context">
+          <strong>Suggested meetup</strong>
+          Campus Grounds Café · Today 11:30 AM
+          <span style="display:block;margin-top:4px;color:var(--muted);font-size:0.75rem;">Tap to view details</span>
+        </div>
+        <div class="messages">
+          <div class="bubble them">Hey! 11:30 works for me at Campus Grounds.</div>
+          <div class="bubble me">Perfect — see you there.</div>
+        </div>
+        <div class="chat-input-row">
+          <div class="chat-input">Message…</div>
+          <button class="btn btn-primary" style="width:auto;padding:10px 16px;margin:0;">Send</button>
+        </div>
+      </div>
+
+      <!-- 14. Matches list -->
+      <div class="screen" data-screen="matches-list">
+        <div class="top-bar">
+          <span style="font-weight:700;font-size:1.125rem;">Matches</span>
+        </div>
+        <div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer;" data-go="chat">
+          <div style="width:56px;height:56px;border-radius:50%;background:var(--bg);border:1.5px dashed var(--border);"></div>
+          <div style="flex:1;">
+            <strong>Jordan</strong>
+            <p style="font-size:0.8rem;color:var(--muted);">Campus Grounds · 11:30 AM</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;padding:12px 0;opacity:.6;">
+          <div style="width:56px;height:56px;border-radius:50%;background:var(--bg);border:1.5px dashed var(--border);"></div>
+          <div style="flex:1;">
+            <strong>Sam</strong>
+            <p style="font-size:0.8rem;color:var(--muted);">New match — view meetup</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15. Profile tab -->
+      <div class="screen" data-screen="profile">
+        <div class="top-bar">
+          <span style="font-weight:700;font-size:1.125rem;">Profile</span>
+          <button class="icon-btn" type="button">⚙</button>
+        </div>
+        <div style="text-align:center;padding:16px 0;">
+          <div style="width:96px;height:96px;border-radius:50%;background:var(--bg);border:2px dashed var(--border);margin:0 auto 12px;"></div>
+          <strong style="font-size:1.125rem;">Alex, 21</strong>
+          <p style="font-size:0.875rem;color:var(--muted);">State University · Verified</p>
+        </div>
+        <p class="label">Approximate area</p>
+        <div class="input">North Campus</div>
+        <p class="label">Travel radius</p>
+        <div class="input">10 km</div>
+        <button class="btn btn-secondary" data-go="location">Edit location</button>
+      </div>
+
+      <nav class="bottom-nav" id="main-nav" style="display:none;">
+        <button class="nav-item active" data-go="discovery" type="button"><span class="nav-icon">◎</span>Discover</button>
+        <button class="nav-item" data-go="matches-list" type="button"><span class="nav-icon">♥</span>Matches</button>
+        <button class="nav-item" data-go="profile" type="button"><span class="nav-icon">○</span>Profile</button>
+      </nav>
+    </div>
+
+    <aside class="nav-map">
+      <h2>Screen map</h2>
+      <p class="section">Onboarding</p>
+      <button type="button" data-nav="welcome" class="active">Welcome</button>
+      <button type="button" data-nav="age-gate">Age gate (18+)</button>
+      <button type="button" data-nav="verify-email">School email</button>
+      <button type="button" data-nav="verify-code">Verification code</button>
+      <button type="button" data-nav="profile-photos">Photos</button>
+      <button type="button" data-nav="profile-details">Profile details</button>
+      <button type="button" data-nav="location">Area & radius</button>
+      <button type="button" data-nav="preferences">Preferences</button>
+      <p class="section">Core loop</p>
+      <button type="button" data-nav="discovery">Discovery (swipe)</button>
+      <button type="button" data-nav="match">Match</button>
+      <button type="button" data-nav="meetup">Meetup proposal ★</button>
+      <button type="button" data-nav="no-venue">No venue (edge)</button>
+      <button type="button" data-nav="chat">Chat</button>
+      <p class="section">Tabs</p>
+      <button type="button" data-nav="matches-list">Matches list</button>
+      <button type="button" data-nav="profile">My profile</button>
+      <p class="wireframe-note">Based on After Class PRD v1. Meetup-first after match; no exact addresses; daytime public venues only.</p>
+    </aside>
+  </div>
+
+  <div class="modal-overlay" id="report-modal">
+    <div class="modal-sheet">
+      <h3>Report or block</h3>
+      <p style="font-size:0.875rem;color:var(--muted);margin-bottom:12px;">Available from profile, match, and chat (FR-SAFE-1).</p>
+      <p class="label">Reason</p>
+      <div class="chip-row">
+        <span class="chip">Harassment</span>
+        <span class="chip">Fake profile</span>
+        <span class="chip">Other</span>
+      </div>
+      <div class="input" style="min-height:60px;">Optional details…</div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" type="button" data-close-modal>Submit report</button>
+        <button class="btn btn-secondary" type="button" data-close-modal>Block user</button>
+        <button class="btn btn-ghost" type="button" data-close-modal>Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const screens = document.querySelectorAll(".screen");
+    const navButtons = document.querySelectorAll(".nav-map [data-nav]");
+    const mainNav = document.getElementById("main-nav");
+    const tabScreens = new Set(["discovery", "matches-list", "profile", "chat", "meetup"]);
+
+    const showScreen = (id) => {
+      screens.forEach((s) => s.classList.toggle("active", s.dataset.screen === id));
+      navButtons.forEach((b) => b.classList.toggle("active", b.dataset.nav === id));
+      mainNav.style.display = tabScreens.has(id) || id === "match" ? "flex" : "none";
+      document.querySelectorAll(".nav-item").forEach((n) => {
+        n.classList.toggle("active", n.dataset.go === id);
+      });
+    };
+
+    document.querySelectorAll("[data-go]").forEach((el) => {
+      el.addEventListener("click", () => showScreen(el.dataset.go));
+    });
+
+    navButtons.forEach((btn) => {
+      btn.addEventListener("click", () => showScreen(btn.dataset.nav));
+    });
+
+    const modal = document.getElementById("report-modal");
+    document.querySelectorAll("[data-open-modal]").forEach((btn) => {
+      btn.addEventListener("click", () => modal.classList.add("open"));
+    });
+    document.querySelectorAll("[data-close-modal]").forEach((btn) => {
+      btn.addEventListener("click", () => modal.classList.remove("open"));
+    });
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) modal.classList.remove("open");
+    });
+  </script>
+</body>
+</html>
