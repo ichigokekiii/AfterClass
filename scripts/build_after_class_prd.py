@@ -11,6 +11,12 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_LEFT
+from reportlab.lib.pagesizes import LETTER
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.lib.units import inch
+from reportlab.platypus import HRFlowable, ListFlowable, ListItem, Paragraph, SimpleDocTemplate, Spacer
 
 
 BLACK = RGBColor(0x00, 0x00, 0x00)
@@ -621,10 +627,162 @@ def add_markdown(md_path: Path) -> None:
     md_path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
 
 
+def add_pdf(pdf_path: Path) -> None:
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle(
+        "AfterClassTitle",
+        parent=styles["Title"],
+        fontName="Helvetica-Bold",
+        fontSize=23,
+        leading=28,
+        textColor=colors.black,
+        alignment=TA_LEFT,
+        spaceAfter=4,
+    )
+    subtitle_style = ParagraphStyle(
+        "AfterClassSubtitle",
+        parent=styles["Normal"],
+        fontName="Helvetica",
+        fontSize=13,
+        leading=16,
+        textColor=colors.HexColor("#666666"),
+        spaceAfter=14,
+    )
+    label_style = ParagraphStyle(
+        "Label",
+        parent=styles["Normal"],
+        fontName="Helvetica-Bold",
+        fontSize=11,
+        leading=13,
+        textColor=colors.HexColor("#666666"),
+        spaceAfter=2,
+    )
+    body_style = ParagraphStyle(
+        "Body",
+        parent=styles["Normal"],
+        fontName="Helvetica",
+        fontSize=11,
+        leading=14,
+        textColor=colors.black,
+        spaceAfter=6,
+    )
+    heading1 = ParagraphStyle(
+        "H1",
+        parent=styles["Heading1"],
+        fontName="Helvetica-Bold",
+        fontSize=16,
+        leading=20,
+        textColor=colors.HexColor("#2E74B5"),
+        spaceBefore=16,
+        spaceAfter=8,
+    )
+    heading2 = ParagraphStyle(
+        "H2",
+        parent=styles["Heading2"],
+        fontName="Helvetica-Bold",
+        fontSize=13,
+        leading=16,
+        textColor=colors.HexColor("#2E74B5"),
+        spaceBefore=12,
+        spaceAfter=6,
+    )
+    heading3 = ParagraphStyle(
+        "H3",
+        parent=styles["Heading3"],
+        fontName="Helvetica-Bold",
+        fontSize=12,
+        leading=15,
+        textColor=colors.HexColor("#1F4D78"),
+        spaceBefore=8,
+        spaceAfter=4,
+    )
+    bullet_style = ParagraphStyle(
+        "BulletBody",
+        parent=body_style,
+        spaceAfter=0,
+        leftIndent=0,
+    )
+
+    story = [
+        Paragraph("PRODUCT REQUIREMENTS DOCUMENT", label_style),
+        Paragraph(TITLE, title_style),
+        Paragraph(SUBTITLE, subtitle_style),
+    ]
+
+    for label, value in METADATA:
+        story.append(Paragraph(f"<b>{label}:</b> {value}", body_style))
+    story.append(Spacer(1, 4))
+    story.append(HRFlowable(width="100%", thickness=0.8, color=colors.HexColor("#C7D4E2")))
+    story.append(Spacer(1, 10))
+
+    heading_styles = {1: heading1, 2: heading2, 3: heading3}
+
+    for block in BLOCKS:
+        if block.kind == "heading":
+            assert block.level is not None and block.text is not None
+            story.append(Paragraph(block.text, heading_styles[block.level]))
+        elif block.kind == "paragraph":
+            assert block.text is not None
+            story.append(Paragraph(block.text, body_style))
+        elif block.kind == "bullets":
+            assert block.items is not None
+            items = [ListItem(Paragraph(item, bullet_style)) for item in block.items]
+            story.append(
+                ListFlowable(
+                    items,
+                    bulletType="bullet",
+                    start="circle",
+                    leftIndent=18,
+                    bulletFontName="Helvetica",
+                    bulletFontSize=10,
+                    spaceAfter=8,
+                )
+            )
+            story.append(Spacer(1, 4))
+        elif block.kind == "numbered":
+            assert block.items is not None
+            items = [ListItem(Paragraph(item, bullet_style)) for item in block.items]
+            story.append(
+                ListFlowable(
+                    items,
+                    bulletType="1",
+                    leftIndent=18,
+                    bulletFontName="Helvetica",
+                    bulletFontSize=10,
+                    spaceAfter=8,
+                )
+            )
+            story.append(Spacer(1, 4))
+        else:
+            raise ValueError(f"Unsupported block kind: {block.kind}")
+
+    pdf_path.parent.mkdir(parents=True, exist_ok=True)
+    doc = SimpleDocTemplate(
+        str(pdf_path),
+        pagesize=LETTER,
+        leftMargin=1 * inch,
+        rightMargin=1 * inch,
+        topMargin=1 * inch,
+        bottomMargin=1 * inch,
+    )
+
+    def on_page(canvas, _doc):
+        canvas.saveState()
+        canvas.setFont("Helvetica", 9)
+        canvas.setFillColor(colors.HexColor("#666666"))
+        canvas.drawString(_doc.leftMargin, LETTER[1] - 0.6 * inch, "After Class | Product Requirements Document")
+        footer_text = f"Build-ready MVP spec | Page {_doc.page}"
+        canvas.drawRightString(LETTER[0] - _doc.rightMargin, 0.55 * inch, footer_text)
+        canvas.restoreState()
+
+    doc.build(story, onFirstPage=on_page, onLaterPages=on_page)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build After Class PRD outputs.")
     parser.add_argument("--md", required=True, help="Path to the Markdown output.")
     parser.add_argument("--docx", required=True, help="Path to the DOCX output.")
+    parser.add_argument("--pdf", help="Path to the PDF output.")
     args = parser.parse_args()
 
     md_path = Path(args.md)
@@ -632,6 +790,8 @@ def main() -> None:
 
     add_markdown(md_path)
     add_docx(docx_path)
+    if args.pdf:
+        add_pdf(Path(args.pdf))
 
 
 if __name__ == "__main__":
