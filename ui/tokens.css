@@ -1,0 +1,53 @@
+/**
+ * After Class — Afternoon Palette
+ * Exact colors from user reference:
+ * Dark Orange/Amber: #ffab49
+ * Light Orange/Peach: #ffca7c
+ * Pale Yellow: #ffe3a3
+ * Cream: #fff6c9
+ * Off-White: #fffde2
+ */
+:root {
+  /* Core Palette */
+  --color-amber: #ffab49;
+  --color-peach: #ffca7c;
+  --color-yellow: #ffe3a3;
+  --color-cream: #fff6c9;
+  --color-white: #fffde2;
+
+  /* Semantic Mapping */
+  --color-background: var(--color-white);
+  --color-surface: #ffffff;
+  --color-surface-elevated: #ffffff;
+  
+  --color-primary: var(--color-amber);
+  --color-primary-dark: #e69a41; /* slightly darker amber for hover */
+  --color-primary-light: var(--color-peach);
+  
+  --color-secondary: var(--color-yellow);
+  
+  --color-text: #2d261e; /* Deepened brown/black for WCAG contrast */
+  --color-text-muted: #8c7a65; /* Muted brown */
+  
+  --color-border: #f2e8d5; /* Softened cream for subtle borders */
+  
+  --color-success: #5a8f7b;
+  --color-danger: #c45c5c;
+  --color-warning: var(--color-amber);
+
+  --font-sans: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, sans-serif;
+  
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-full: 9999px;
+  
+  --shadow-sm: 0 2px 8px -2px rgba(45, 38, 30, 0.05);
+  --shadow-md: 0 8px 24px -4px rgba(45, 38, 30, 0.08);
+  --shadow-lg: 0 16px 32px -4px rgba(45, 38, 30, 0.12);
+  --shadow-glow: 0 0 20px 0 rgba(255, 171, 73, 0.3);
+  
+  --touch-min: 3rem; /* 48px */
+}
