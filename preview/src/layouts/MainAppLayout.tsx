@@ -48,8 +48,9 @@ function MainAppLayoutContent() {
         <MatchAcceptOverlay
           profile={pendingMatch}
           onAccept={() => {
+            const matchId = pendingMatch.id;
             finishMatch();
-            navigate('/matches');
+            navigate(`/meetup/${matchId}`);
           }}
           onKeepSearching={finishMatch}
           onExpire={finishMatch}

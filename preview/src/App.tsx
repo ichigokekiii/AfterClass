@@ -5,6 +5,8 @@ import { MainAppLayout } from '@/layouts/MainAppLayout';
 import { AuthPage } from '@/pages/AuthPage';
 import { DonePage } from '@/pages/DonePage';
 import { HomeTabPage } from '@/pages/HomeTabPage';
+import { MeetupCompletePage } from '@/pages/MeetupCompletePage';
+import { MeetupProposalPage } from '@/pages/MeetupProposalPage';
 import { MatchesTabPage } from '@/pages/MatchesTabPage';
 import { ProfileTabPage } from '@/pages/ProfileTabPage';
 import { ConfirmPasswordPage } from '@/pages/ConfirmPasswordPage';
@@ -29,6 +31,8 @@ export default function App() {
         {profileRoutes.map((route) => (
           <Route key={route.path} path={route.path} element={route.element} />
         ))}
+        <Route path="/meetup/:matchId" element={<MeetupProposalPage />} />
+        <Route path="/meetup-complete" element={<MeetupCompletePage />} />
         <Route element={<MainAppLayout />}>
           <Route path="/home" element={<HomeTabPage />} />
           <Route path="/matches" element={<MatchesTabPage />} />

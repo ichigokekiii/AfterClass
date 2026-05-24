@@ -7,7 +7,7 @@ import { useMatchOverlay } from '@/contexts/MatchOverlayContext';
 import { MOCK_DISCOVERY_PROFILES, type DiscoveryProfile, type SwipeAdvance } from '@/constants/discovery';
 
 export function HomeTabPage() {
-  const { pendingMatch, showMatch, advanceDeckSignal } = useMatchOverlay();
+  const { pendingMatch, showMatch, advanceDeckSignal, requestDeckAdvance } = useMatchOverlay();
   const [deckKey, setDeckKey] = useState(0);
   const [detailProfile, setDetailProfile] = useState<DiscoveryProfile | null>(null);
 
@@ -26,6 +26,21 @@ export function HomeTabPage() {
     setDetailProfile(null);
   }, []);
 
+  const handleNotInterested = useCallback(() => {
+    setDetailProfile(null);
+    requestDeckAdvance();
+  }, [requestDeckAdvance]);
+
+  const handleInterested = useCallback(() => {
+    if (!detailProfile) {
+      return;
+    }
+
+    const profile = detailProfile;
+    setDetailProfile(null);
+    showMatch(profile);
+  }, [detailProfile, showMatch]);
+
   return (
     <>
       <MainTopBar />
@@ -42,7 +57,12 @@ export function HomeTabPage() {
         />
       </div>
 
-      <ProfileDetailSheet profile={detailProfile} onClose={() => setDetailProfile(null)} />
+      <ProfileDetailSheet
+        profile={detailProfile}
+        onClose={() => setDetailProfile(null)}
+        onNotInterested={handleNotInterested}
+        onInterested={handleInterested}
+      />
     </>
   );
 }

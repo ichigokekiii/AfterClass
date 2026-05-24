@@ -65,7 +65,7 @@ The primary user is an active college or university student, age 18 or older, wh
 - Student mobile onboarding with approved `.edu` verification through manual signup or Google OAuth using the same approved `.edu` identity.
 - Mandatory face-to-profile verification before discovery access.
 - A post-login chooser for `Find People` or `Review a Friend` when no profile exists.
-- Profile setup, approximate area selection, travel radius selection, backup email capture, and trusted contact capture.
+- Profile setup, approximate area selection, weekday availability, daytime free-time windows, travel radius selection, backup email capture, and trusted contact capture.
 - Swipe-style discovery, mutual matching, and a meetup-first flow with no standard in-app one-to-one chat.
 - A hybrid venue engine that prefers safety-approved venues in strong-coverage cities and can use online place data to fill coverage gaps.
 - User-facing school compatibility insights based on aggregated platform data, shown as qualitative school-to-school labels.
@@ -92,7 +92,7 @@ The primary user is an active college or university student, age 18 or older, wh
 2. The submitted or authenticated Google account must itself be an approved `.edu` identity tied to an activated school record.
 3. The app verifies school identity by email code, magic link, or equivalent approved school-auth flow.
 4. Before discovery access, the user completes mandatory face-to-profile verification to confirm that the onboarding face scan matches the uploaded profile photos. This is an authenticity check, not government-ID verification.
-5. The user provides profile basics, approximate area, travel radius, backup email, and a trusted contact for safety escalation.
+5. The user provides profile basics, approximate area, travel radius, weekday availability, daytime free-time windows, backup email, and a trusted contact for safety escalation.
 6. If no profile exists, the app presents the onboarding choices `Find People` and `Review a Friend`.
 
 ### Journey 2: Review a friend
@@ -111,11 +111,11 @@ The primary user is an active college or university student, age 18 or older, wh
 
 ### Journey 4: Meetup planning and confirmation
 
-1. When a match is created, the app computes feasible meetup suggestions using both users' approximate areas, both travel radii, venue operating hours, and the daytime scheduling window.
-2. The app proposes one primary venue plus up to two alternates, along with three daytime slots between 8:00 AM and 6:00 PM local time.
+1. When a match is created, the app computes feasible meetup suggestions using both users' approximate areas, both travel radii, overlapping weekday availability, overlapping daytime free-time windows, venue operating hours, and the daytime scheduling window.
+2. The app proposes one primary venue plus up to two alternates. The system automatically assigns a date and time from the shared availability overlap.
 3. Venue sourcing is hybrid: safety-approved venues are preferred in strong-coverage cities, while online place data may supply additional candidate venues where approved coverage is sparse.
 4. If no safe valid venue exists, the app clearly says so and prompts users to widen radius or let the match expire instead of fabricating an invalid suggestion.
-5. The meetup proposal screen must show a visible expiration countdown. If the timer elapses without a mutually accepted plan, the match closes.
+5. Final time confirmation happens after the user confirms the match on the venue proposal screen, not during initial slot selection on that screen.
 
 ### Journey 5: Arrival, meetup safety, and emergency support
 
@@ -155,29 +155,33 @@ This section updates the founder wireframe flow (v2) and should drive the next w
 | 5 | Face check | User completes face-to-profile authenticity scan. |
 | 6 | No-profile chooser | If no profile exists, user chooses `Find People` or `Review a Friend`. |
 | 7 | Profile setup | Photos, name, age, school, bio, optional program or year. |
-| 8 | Area and radius | Approximate area + max travel radius. |
-| 9 | Safety setup | Backup email and trusted contact. |
-| 10 | Discovery / swipe | Swipe left or right; school context on card. |
-| 11 | Match | Full-screen match moment with typewritten “Found a Match!” and a 30-second accept timer before discovery continues. |
-| 12 | Meetup proposal | Venue, slots, expiration, and accept flow. |
-| 13 | Safety consent | User opts into meetup-window location support for that date. |
-| 14 | Arrival check | Confirm arrival with proximity support. |
-| 15 | Active meetup | Safety tools are available, including shake emergency flow. |
-| 16 | Post-date feedback | Outcome-aware review and optional no-show report. |
-| 17 | Continue elsewhere | Optional exchange of social/contact methods after completed meetup. |
+| 8 | Availability | Required weekday availability plus up to three daytime free-time windows (8:00 AM–6:00 PM). |
+| 9 | Area and radius | Approximate area + max travel radius. |
+| 10 | Safety setup | Backup email and trusted contact. |
+| 11 | Discovery / swipe | Swipe left or right; school context on card. |
+| 12 | Match | Full-screen match moment with typewritten “Found a Match!”, auto-assigned availability window, and a 30-second accept timer before discovery continues. |
+| 13 | Meetup proposal | Map plus venue suggestion; confirm match to continue scheduling. |
+| 14 | Safety consent | User opts into meetup-window location support for that date. |
+| 15 | Arrival check | Confirm arrival with proximity support. |
+| 16 | Active meetup | Safety tools are available, including shake emergency flow. |
+| 17 | Post-date feedback | Outcome-aware review and optional no-show report. |
+| 18 | Continue elsewhere | Optional exchange of social/contact methods after completed meetup. |
 
 ### Meetup proposal screen
 
-When two users match, the app should speak in a concierge tone and summarize the logic behind the suggestion without exposing precise private data.
+When two users match, the app should speak in a concierge tone and summarize the logic behind the venue suggestion without exposing precise private data.
 
-> Oh hey — you both said you're open to meeting. You both set a **[X] km** radius. Your shared best daytime options are around **[area label]**. I'm suggesting you meet at **[venue]** at **[time]**. **This match expires in [countdown].**
+> Oh hey — you both said you're open to meeting. You both set a **[X] km** radius. Your shared best daytime options are around **[area label]**. I'm suggesting you meet at **[venue]**.
 
 Supporting UI on the same screen:
 
-- Primary venue plus up to two alternates.
-- Three daytime slot chips.
-- Actions to accept meetup, see alternates, widen radius if needed, or let the match expire.
-- No open-ended chat composer.
+- Map showing both users and the suggested venue.
+- Primary venue photo and short description.
+- Profile detail for the matched person.
+- **Confirm Match** action that returns the user to discovery after acceptance.
+- No time-slot picker on this screen. Final date and time assignment happens on a follow-up scheduling step after the user confirms the match.
+
+The **Found a Match!** overlay shown immediately after a mutual like must display the system-assigned availability window in a human-readable format such as **Wed, 11:30 AM to 12:30 PM**. That window must always be at least one hour long.
 
 ### Safety interaction rules
 
@@ -218,6 +222,8 @@ Supporting UI on the same screen:
 - FR-PRO-10: The main profile and home surface must display the user's full name, school, and small profile photo in a clear identity block.
 - FR-PRO-11: If a profile includes approved friend-review content, the UI must show the reviewer's full name, school, and small profile photo beside the review snippet.
 - FR-PRO-12: The MVP must not include a user-managed friends list, follow list, or mutual-friends graph.
+- FR-PRO-13: During required onboarding, users must select at least one weekday when they are available for a meetup.
+- FR-PRO-14: During required onboarding, users must add at least one and up to three daytime free-time windows. Each window must fall inside 8:00 AM to 6:00 PM local time.
 
 ### Friend review and social proof
 
@@ -244,11 +250,12 @@ Supporting UI on the same screen:
 - FR-MAT-1: Mutual likes create a match immediately.
 - FR-MAT-2: Match creation must emit analytics events for school-pair aggregation and post-match funnel tracking.
 - FR-MAT-3: The first post-match moment must appear as an in-place full-screen match acceptance overlay rather than a separate chat thread or unrelated page transition.
-- FR-MAT-4: When a mutual match is detected, the app must show a typewritten “Found a Match!” message and an **Accept Match?** action with a visible 30-second fill timer. This gives users time to pause, review who they may meet in person, and confirm intentionally before moving forward.
+- FR-MAT-4: When a mutual match is detected, the app must show a typewritten “Found a Match!” message, the system-assigned availability window, and an **Accept Match?** action with a visible 30-second fill timer. This gives users time to pause, review who they may meet in person, and confirm intentionally before moving forward.
 - FR-MAT-5: If the user does not accept within 30 seconds, the pending match must expire and the user must return to discovery without creating an active match.
 - FR-MAT-6: After the user accepts a match, the first post-match screen must emphasize the meetup suggestion flow rather than a chat thread.
-- FR-MAT-7: Every accepted match must display a countdown until expiration on the meetup proposal screen. The MVP default expiration window is 48 hours from match creation unless changed by product policy.
-- FR-MAT-8: When a match expires without a mutually accepted meetup plan, the match must move to an expired state and disappear from active match lists.
+- FR-MAT-7: The MVP default match expiration window is 48 hours from match creation unless changed by product policy. When a match expires without a mutually accepted meetup plan, the match must move to an expired state and disappear from active match lists.
+- FR-MAT-8: After the user taps **Confirm Match** on the meetup proposal screen, the app must return them to the main discovery surface rather than a separate matches hub.
+- FR-MAT-9: The **Found a Match!** overlay must show the auto-assigned meetup availability in the format **Day, Start Time to End Time** (for example, **Wed, 11:30 AM to 12:30 PM**). The displayed window must always be at least one hour long.
 
 ### Meetup recommendation engine
 
@@ -259,11 +266,13 @@ Supporting UI on the same screen:
 - FR-MEET-5: Bars, clubs, hotels, private residences, and other high-risk or low-visibility venues are excluded from the eligible set.
 - FR-MEET-6: The engine must rank eligible venues by midpoint closeness, venue quality, daytime suitability, operating hours, and safety eligibility.
 - FR-MEET-7: The app must propose one primary venue and up to two alternates when multiple valid options exist.
-- FR-MEET-8: Suggested time slots must stay inside the MVP daytime window of 8:00 AM to 6:00 PM local time.
-- FR-MEET-9: Suggested slots should feel after-class friendly, with default slots biased toward late morning, early afternoon, and late afternoon rather than early morning extremes.
-- FR-MEET-10: If no safe valid venue exists near the midpoint, the system must broaden the overlap search zone before failing gracefully.
-- FR-MEET-11: If there is no shared feasible venue at all, the app must clearly communicate that no valid suggestion is available and offer users the option to adjust radius or let the match expire.
-- FR-MEET-12: User-facing meetup suggestions must never expose the other person's precise approximate-area centroid or exact address source used for the calculation.
+- FR-MEET-8: The scheduling engine must derive meetup date and time automatically from the overlap of both users' onboarding weekday availability and daytime free-time windows.
+- FR-MEET-9: Auto-assigned meetup windows must stay inside the MVP daytime window of 8:00 AM to 6:00 PM local time and must be at least one hour long.
+- FR-MEET-10: Suggested slots should feel after-class friendly, with default slots biased toward late morning, early afternoon, and late afternoon rather than early morning extremes.
+- FR-MEET-11: If no safe valid venue exists near the midpoint, the system must broaden the overlap search zone before failing gracefully.
+- FR-MEET-12: If there is no shared feasible venue at all, the app must clearly communicate that no valid suggestion is available and offer users the option to adjust radius or let the match expire.
+- FR-MEET-13: User-facing meetup suggestions must never expose the other person's precise approximate-area centroid or exact address source used for the calculation.
+- FR-MEET-14: The mapped meetup proposal screen must not ask users to pick among time slots. Time confirmation happens on a later scheduling step after **Confirm Match**.
 
 ### Arrival, feedback, continuation, and no-show handling
 

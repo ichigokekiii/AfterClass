@@ -4,6 +4,7 @@ import { TypewriterText } from '@/components/main/TypewriterText';
 import { MATCH_ACCEPT_SECONDS } from '@/constants/discovery';
 import type { DiscoveryProfile } from '@/constants/discovery';
 import { getDiscoveryDisplayName, getDiscoverySchool } from '@/constants/discovery';
+import { formatMatchAvailability, getMatchAvailability } from '@/constants/meetup';
 
 type MatchAcceptOverlayProps = {
   profile: DiscoveryProfile;
@@ -23,12 +24,25 @@ function MapPinIcon() {
   );
 }
 
+function CalendarIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M7 3a1 1 0 0 1 1 1v1h8V4a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h1V4a1 1 0 0 1 1-1Zm12 8H5v8h14v-8Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
 export function MatchAcceptOverlay({ profile, onAccept, onKeepSearching, onExpire }: MatchAcceptOverlayProps) {
   const [progress, setProgress] = useState(0);
   const expiredRef = useRef(false);
 
   const name = getDiscoveryDisplayName(profile);
   const school = getDiscoverySchool(profile);
+  const availability = getMatchAvailability(profile.id);
+  const availabilityLabel = availability ? formatMatchAvailability(availability) : null;
 
   useEffect(() => {
     expiredRef.current = false;
@@ -70,6 +84,12 @@ export function MatchAcceptOverlay({ profile, onAccept, onKeepSearching, onExpir
               <MapPinIcon />
               <span>{school}</span>
             </p>
+            {availabilityLabel ? (
+              <p className="match-accept-layer__availability">
+                <CalendarIcon />
+                <span>{availabilityLabel}</span>
+              </p>
+            ) : null}
           </figcaption>
         </figure>
 

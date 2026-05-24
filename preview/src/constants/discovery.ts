@@ -1,3 +1,4 @@
+import discoveryProfilePhoto from '@assets/discovery-profile-sample.png';
 import type { ProfileData } from '@/constants/profile';
 
 export type DiscoveryProfile = ProfileData & {
@@ -51,7 +52,7 @@ export const MOCK_DISCOVERY_PROFILES: DiscoveryProfile[] = [
     archetype: 'Low-key',
     openingMove: 'Suggest a coffee spot near campus',
     favoriteSpots: ['UST Main Building', 'Mall of Asia food hall'],
-    photoUrl: 'https://picsum.photos/seed/afterclass-sofia/400/480',
+    photoUrl: discoveryProfilePhoto,
   },
   {
     id: 'marco',
@@ -84,7 +85,7 @@ export const MOCK_DISCOVERY_PROFILES: DiscoveryProfile[] = [
     archetype: 'Creative',
     openingMove: 'Ask about their favorite campus food spot',
     favoriteSpots: ['Henry Sy Hall lobby', 'Starbucks Taft'],
-    photoUrl: 'https://picsum.photos/seed/afterclass-marco/400/480',
+    photoUrl: discoveryProfilePhoto,
   },
   {
     id: 'isabel',
@@ -118,7 +119,7 @@ export const MOCK_DISCOVERY_PROFILES: DiscoveryProfile[] = [
     archetype: 'Social butterfly',
     openingMove: 'Share a fun campus story',
     favoriteSpots: ['Sunken Garden', 'Maginhawa Street'],
-    photoUrl: 'https://picsum.photos/seed/afterclass-isabel/400/480',
+    photoUrl: discoveryProfilePhoto,
   },
 ];
 

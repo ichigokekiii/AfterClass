@@ -1,10 +1,12 @@
 import type { RouteObject } from 'react-router-dom';
 
 import { ProfileArchetypePage } from '@/pages/profile/ProfileArchetypePage';
+import { ProfileAvailableDaysPage } from '@/pages/profile/ProfileAvailableDaysPage';
 import { ProfileBirthdayPage } from '@/pages/profile/ProfileBirthdayPage';
 import { ProfileChooserPage } from '@/pages/profile/ProfileChooserPage';
 import { ProfileCoursePage } from '@/pages/profile/ProfileCoursePage';
 import { ProfileFavoriteSpotsPage } from '@/pages/profile/ProfileFavoriteSpotsPage';
+import { ProfileFreeTimesPage } from '@/pages/profile/ProfileFreeTimesPage';
 import { ProfileGenderPage } from '@/pages/profile/ProfileGenderPage';
 import { ProfileInterestedInPage } from '@/pages/profile/ProfileInterestedInPage';
 import { ProfileInterestsPage } from '@/pages/profile/ProfileInterestsPage';
@@ -36,6 +38,8 @@ export const profileRoutes: RouteObject[] = [
   { path: '/profile-residence', element: <ProfileResidencePage /> },
   { path: '/profile-residence-map', element: <ProfileResidenceMapPage /> },
   { path: '/profile-meetup-locations', element: <ProfileMeetupLocationsPage /> },
+  { path: '/profile-available-days', element: <ProfileAvailableDaysPage /> },
+  { path: '/profile-free-times', element: <ProfileFreeTimesPage /> },
   { path: '/profile-interests', element: <ProfileInterestsPage /> },
   { path: '/profile-social-media', element: <ProfileSocialMediaPage /> },
   { path: '/profile-prompts', element: <ProfilePromptsPage /> },

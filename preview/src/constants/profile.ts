@@ -8,6 +8,8 @@ export type ProfileStepId =
   | 'interested-in'
   | 'residence'
   | 'meetup-locations'
+  | 'available-days'
+  | 'free-times'
   | 'interests'
   | 'social-media'
   | 'prompts'
@@ -44,6 +46,8 @@ export type ProfileData = {
   residenceLongitude?: number;
   residenceSource?: 'suggestion' | 'map' | 'custom';
   meetupLocations?: string[];
+  availableDays?: string[];
+  freeTimes?: string[];
   interests?: string[];
   socialMedia?: SocialMediaEntry[];
   prompts?: ProfilePrompt[];
@@ -64,6 +68,8 @@ export const PROFILE_REQUIRED_STEPS: ProfileStepId[] = [
   'interested-in',
   'residence',
   'meetup-locations',
+  'available-days',
+  'free-times',
   'interests',
   'social-media',
   'prompts',
@@ -89,6 +95,8 @@ export const PROFILE_STEP_PATHS: Record<ProfileStepId, string> = {
   'interested-in': '/profile-interested-in',
   residence: '/profile-residence',
   'meetup-locations': '/profile-meetup-locations',
+  'available-days': '/profile-available-days',
+  'free-times': '/profile-free-times',
   interests: '/profile-interests',
   'social-media': '/profile-social-media',
   prompts: '/profile-prompts',
@@ -506,6 +514,25 @@ export const INTEREST_OPTIONS = [
   'Sports',
   'Reading',
 ] as const;
+
+export const AVAILABLE_DAY_OPTIONS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
+
+function formatMinutesAsTime(minutes: number): string {
+  const hours24 = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  const period = hours24 >= 12 ? 'PM' : 'AM';
+  const hours12 = hours24 % 12 || 12;
+
+  return mins === 0 ? `${hours12}:00 ${period}` : `${hours12}:${String(mins).padStart(2, '0')} ${period}`;
+}
+
+export const DAYTIME_START_MINUTES = 8 * 60;
+export const DAYTIME_END_MINUTES = 18 * 60;
+
+export const DAYTIME_TIME_OPTIONS = Array.from(
+  { length: (DAYTIME_END_MINUTES - DAYTIME_START_MINUTES) / 30 + 1 },
+  (_, index) => formatMinutesAsTime(DAYTIME_START_MINUTES + index * 30),
+);
 
 export const SOCIAL_PLATFORMS = ['Instagram', 'Snapchat', 'TikTok', 'LinkedIn', 'X'] as const;
 
