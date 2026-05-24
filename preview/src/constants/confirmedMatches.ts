@@ -7,10 +7,24 @@ export type ConfirmedMatch = {
 };
 
 let confirmedMatches: ConfirmedMatch[] = [];
+const EMPTY_MATCHES: ConfirmedMatch[] = [];
+let cachedSnapshot: ConfirmedMatch[] = EMPTY_MATCHES;
 
 const listeners = new Set<() => void>();
 
+function rebuildSnapshot() {
+  if (confirmedMatches.length === 0) {
+    cachedSnapshot = EMPTY_MATCHES;
+    return;
+  }
+
+  cachedSnapshot = [...confirmedMatches].sort(
+    (left, right) => new Date(right.confirmedAt).getTime() - new Date(left.confirmedAt).getTime(),
+  );
+}
+
 function emitChange() {
+  rebuildSnapshot();
   listeners.forEach((listener) => listener());
 }
 
@@ -20,9 +34,7 @@ export function subscribeConfirmedMatches(listener: () => void): () => void {
 }
 
 export function getConfirmedMatches(): ConfirmedMatch[] {
-  return [...confirmedMatches].sort(
-    (left, right) => new Date(right.confirmedAt).getTime() - new Date(left.confirmedAt).getTime(),
-  );
+  return cachedSnapshot;
 }
 
 export function getConfirmedMatch(profileId: string): ConfirmedMatch | null {
