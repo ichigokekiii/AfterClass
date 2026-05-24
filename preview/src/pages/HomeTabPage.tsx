@@ -45,7 +45,7 @@ export function HomeTabPage() {
     <>
       <MainTopBar />
 
-      <div className="main-page__body">
+      <div className="main-page__body main-page__body--home">
         <SwipeableCardStack
           key={deckKey}
           profiles={MOCK_DISCOVERY_PROFILES}
