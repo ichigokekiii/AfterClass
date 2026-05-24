@@ -1,53 +1,105 @@
 /**
- * After Class — Afternoon Palette
- * Exact colors from user reference:
- * Dark Orange/Amber: #ffab49
- * Light Orange/Peach: #ffca7c
- * Pale Yellow: #ffe3a3
- * Cream: #fff6c9
- * Off-White: #fffde2
+ * After Class — Late Afternoon Beach palette
+ * Extracted from Figma "Pages that matter" (canonical visual design).
+ * Swatches on canvas: #F9E7B1, #F6CDA3, #F9B3A6, #7060A5
  */
 :root {
-  /* Core Palette */
-  --color-amber: #ffab49;
-  --color-peach: #ffca7c;
-  --color-yellow: #ffe3a3;
-  --color-cream: #fff6c9;
-  --color-white: #fffde2;
+  /* Core palette */
+  --color-cream-light: #f9e7b1;
+  --color-peach-mid: #f6cda3;
+  --color-coral: #f9b3a6;
+  --color-coral-brand: #fba797;
+  --color-purple: #7060a5;
 
-  /* Semantic Mapping */
-  --color-background: var(--color-white);
+  /* Semantic mapping */
+  --color-background: #ffffff;
   --color-surface: #ffffff;
+  --color-surface-tint: #fbcac1;
   --color-surface-elevated: #ffffff;
-  
-  --color-primary: var(--color-amber);
-  --color-primary-dark: #e69a41; /* slightly darker amber for hover */
-  --color-primary-light: var(--color-peach);
-  
-  --color-secondary: var(--color-yellow);
-  
-  --color-text: #2d261e; /* Deepened brown/black for WCAG contrast */
-  --color-text-muted: #8c7a65; /* Muted brown */
-  
-  --color-border: #f2e8d5; /* Softened cream for subtle borders */
-  
+
+  --color-primary: var(--color-coral);
+  --color-primary-dark: #e8a094;
+  --color-primary-light: var(--color-coral-brand);
+  --color-primary-on: #000000;
+
+  --color-secondary: var(--color-peach-mid);
+  --color-accent: var(--color-purple);
+
+  --color-text: #000000;
+  --color-text-muted: rgba(0, 0, 0, 0.65);
+  --color-text-on-primary: #ffffff;
+  --color-text-brand: var(--color-coral-brand);
+
+  --color-border: #d9d9d9;
+  --color-dot-inactive: #d9d9d9;
+  --color-dot-active: var(--color-coral);
+
   --color-success: #5a8f7b;
   --color-danger: #c45c5c;
-  --color-warning: var(--color-amber);
+  --color-warning: var(--color-coral);
 
-  --font-sans: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, sans-serif;
-  
-  --radius-sm: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
-  --radius-2xl: 2rem;
+  /* Typography — iOS system (SF Pro on Apple devices) */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
+  --font-display: var(--font-sans);
+  --font-body: var(--font-sans);
+
+  /* iOS Dynamic Type–aligned scale */
+  --text-brand: 1.25rem; /* 20px — Title 3 */
+  --text-headline-lg: 2.125rem; /* 34px — Large Title */
+  --text-headline-md: 1.75rem; /* 28px — Title 1 */
+  --text-title-2: 1.375rem; /* 22px — Title 2 */
+  --text-body: 1.0625rem; /* 17px — Body */
+  --text-button: 1.0625rem; /* 17px — Headline / button label */
+  --text-subhead: 0.9375rem; /* 15px — Subhead */
+  --text-footnote: 0.8125rem; /* 13px — Footnote */
+  --text-badge: 0.9375rem; /* 15px */
+
+  --weight-display-bold: 700;
+  --weight-display: 600;
+  --weight-body: 400;
+  --weight-button: 600;
+
+  --tracking-tight: -0.02em;
+  --tracking-body: -0.01em;
+  --leading-tight: 1.15;
+  --leading-body: 1.35;
+
+  /* Layout — iPhone frame in Figma is 402×874 */
+  --screen-padding-x: 1.75rem; /* 28px */
+  --content-max-width: 25.125rem; /* 402px */
+
+  /* Radius — heavily rounded / pill UI */
+  --radius-sm: 0.75rem; /* 12px — photos, cards */
+  --radius-md: 1.0625rem; /* 17px — discovery card */
+  --radius-lg: 1.1875rem; /* 19px — bottom sheet */
+  --radius-xl: 2.1875rem; /* 35px — header chips */
+  --radius-pill: 3rem; /* 48px — primary buttons */
   --radius-full: 9999px;
-  
-  --shadow-sm: 0 2px 8px -2px rgba(45, 38, 30, 0.05);
-  --shadow-md: 0 8px 24px -4px rgba(45, 38, 30, 0.08);
-  --shadow-lg: 0 16px 32px -4px rgba(45, 38, 30, 0.12);
-  --shadow-glow: 0 0 20px 0 rgba(255, 171, 73, 0.3);
-  
+
+  /* Components */
+  --button-height: 3.875rem; /* 62px */
+  --button-width: 21.625rem; /* 346px within 402 frame */
+  --dot-size: 0.75rem; /* 12px */
+  --logo-size: 2.1875rem; /* 35px */
+  --nav-bar-height: 3.875rem; /* 62px floating tab bar */
+  --nav-bar-width: 21.625rem; /* 346px — matches primary button width */
+  --nav-icon-size: 1.5rem; /* 24px */
+  --badge-height: 2rem; /* 32px school pill */
+
+  --shadow-nav: 0 22px 58.9px -1px rgba(0, 0, 0, 0.25);
+  --shadow-sm: 0 2px 8px -2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.08);
+
   --touch-min: 3rem; /* 48px */
+
+  /* iPhone safe areas — Dynamic Island + home indicator (402pt frame) */
+  --phone-status-bar-height: 3.375rem; /* 54px top safe area */
+  --phone-status-bar-inset-x: 1.75rem; /* 28px */
+  --phone-dynamic-island-top: 0.6875rem; /* 11px */
+  --phone-dynamic-island-width: 7.875rem; /* 126px */
+  --phone-dynamic-island-height: 2.125rem; /* 34px */
+  --phone-home-indicator-height: 2.125rem; /* 34px bottom safe area */
+  --phone-safe-area-top: var(--phone-status-bar-height);
+  --phone-safe-area-bottom: var(--phone-home-indicator-height);
+  --sign-in-brand-offset-x: 0.625rem; /* optical center nudge past back button */
 }

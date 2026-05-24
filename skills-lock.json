@@ -7,6 +7,12 @@
       "skillPath": "skills/caveman/SKILL.md",
       "computedHash": "dfbf85749fd474feeb0bbe60c779795ecd5dbec0083299b56e68916bc3ddd8c9"
     },
+    "mobile-ios-design": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/ui-design/skills/mobile-ios-design/SKILL.md",
+      "computedHash": "3902f919488d8ddc983e157bbcd5f16b739b84eeaab57002bf52b7f9601ed6ad"
+    },
     "shadcn-ui": {
       "source": "google-labs-code/stitch-skills",
       "sourceType": "github",

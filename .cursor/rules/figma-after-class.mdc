@@ -1,0 +1,126 @@
+---
+description: After Class canonical Figma file and design scope
+alwaysApply: true
+---
+
+# After Class — Figma source of truth
+
+## Canonical file
+
+Use this Figma file for all product design work (before and during implementation):
+
+- **Name:** After Class
+- **URL:** https://www.figma.com/design/j7Z2OXARtqZUlyZSnKUg79/After-Class?node-id=0-1
+- **fileKey:** `j7Z2OXARtqZUlyZSnKUg79`
+
+Do not create a separate design file unless the user explicitly asks.
+
+## Scope: "Pages that matter"
+
+Section **Pages that matter** (`node-id=7-3`) is the authoritative MVP screen set. Build and refine these four frames only unless the user expands scope.
+
+| Order | Frame | node-id | PRD mapping |
+|-------|-------|---------|---------------|
+| 1 | Welcome page | `11-37` | Welcome / onboarding entry |
+| 2 | Main Page | `8-8` | Discovery / swipe card |
+| 3 | Matched Page | `8-10` | Match celebration |
+| 4 | Mapepd date | `8-12` | Meetup proposal (mapped venue + confirm) |
+
+**Key copy from Figma (use unless PRD overrides):**
+- Tagline: "Match with verified students. We plan the daytime date. You just show up."
+- Welcome headline: "Meet Your Campus Match Today"
+- Match CTA: "See where you'll meet!"
+- Meetup: "Found a Spot for you!" / "The best coffee date thats in between you" / "Confirm Match"
+
+**Other file sections (reference only, not MVP scope):**
+- **Onboarding** (`1-3`): Welcome 1–3 carousel, Auth Page, Sign In
+- **Main Page** (`2-2`): swipe animation notes (book-page flip metaphor)
+- Color palette swatches and logo assets elsewhere on the canvas
+
+When designing or implementing UI:
+
+1. Read and follow frames under **Pages that matter** first.
+2. Treat other sections as reference or WIP unless the user says otherwise.
+3. Align with `docs/after-class-prd.md` when Figma and PRD differ — flag conflicts to the user.
+
+## Visual design language (from "Pages that matter")
+
+**Use this language for all new UI, including onboarding.** Onboarding wireframes (`1-3`) define *flow and copy placeholders* only — apply the polished patterns below.
+
+### Palette (Late Afternoon Beach)
+
+| Token | Hex | Usage |
+|-------|-----|--------|
+| Coral primary | `#F9B3A6` | Primary buttons, match screen bg, active pager dot |
+| Coral brand | `#FBA797` | "After Class" wordmark on white screens |
+| White | `#FFFFFF` | Screen bg, secondary buttons, badges, bottom sheet |
+| Inactive gray | `#D9D9D9` | Inactive pager dots, sheet grab handle |
+| Black | `#000000` | Headlines, button labels on coral/white |
+| Surface tint | `rgba(249,179,166,0.7)` | Discovery card backdrop |
+
+CSS variables: `ui/tokens.css`. Assets: `ui/assets/logo-sun.png`, `ui/assets/onboarding-hero.png`.
+
+### Typography
+
+Uses **SF Pro** via the iOS system font stack (`-apple-system` / system default in RN).
+
+| Role | Style | Size | Weight |
+|------|-------|------|--------|
+| Brand wordmark | Title 3 | 20px | Semibold (600) |
+| Hero headline | Large Title | 34px | Bold (700) |
+| Section title | Title 1 | 28px | Bold (700) |
+| Body / tagline | Body | 17px | Regular (400) |
+| Button label | Headline | 17px | Semibold (600) |
+| Helper / subhead | Subhead | 15px | Regular (400) |
+
+CSS tokens: `ui/tokens.css`. Mobile scale: `mobile/constants/typography.ts`.
+
+### Recurring components
+
+1. **App header** — centered logo (35×35 sun) + "After Class" in `#FBA797`; ~34px from top.
+2. **Primary button** — pill (`border-radius: 48px`), 346×62px, coral fill, black Inter Medium 14px label. Bottom-anchored with ~28px side inset.
+3. **Secondary button** — same pill shape, white fill, black label (e.g. match CTA "See where you'll meet!").
+4. **Pager dots** — 12×12 circles; active `#F9B3A6`, inactive `#D9D9D9`; centered above primary button.
+5. **Hero illustration** — large centered 3D/character art (~366px) below header on welcome.
+6. **School badge** — white pill, map pin icon + school name (discovery only).
+7. **Floating tab bar** — white pill 265×50, shadow, coral icons (Heart / Home / Person).
+8. **Bottom sheet** — white panel, 19px top radius, gray grab handle (meetup screen).
+
+### Screen backgrounds
+
+- **Default:** white (`Welcome`, `Main`, `Mapepd date`)
+- **Celebration:** full coral fill (`Matched Page`) with white text + white CTA
+
+### Onboarding wireframes → apply polished template
+
+Wireframe section `1-3` — implement with **Welcome page** (`11-37`) as the layout template:
+
+| Wireframe | node-id | Headline (wireframe) | Primary CTA | Notes |
+|-----------|---------|----------------------|-------------|-------|
+| Welcome 1 | `1-6` | "Welcome, Insert Text Here!" | Next | Carousel slide 1 — replace placeholder with product copy |
+| Welcome 2 | `4-13` | "Hot Singles in your Area…" | Next | Slide 2 |
+| Welcome 3 | `4-22` | "Start Meeting After Class!" | Get Started | Final carousel → routes to Auth |
+| Auth Page | `4-36` | "Start Meeting After Class!" | Sign in + Create Account | Two stacked primary-style buttons |
+| Sign In | `4-60` | "Welcome Back" | Sign in + OAuth stack | Back arrow; email/password fields; "or" divider; Google / Apple / Number |
+
+**Onboarding content rules:**
+- Reuse tagline on every carousel slide: *"Match with verified students. We plan the daytime date. You just show up."*
+- 3-slide carousel with pager dots (same as Welcome page).
+- Do **not** use wireframe gray boxes or lorem ipsum in code — use PRD-aligned copy.
+- Sign In wireframe includes Apple/Number — confirm against PRD (MVP: `.edu` + Google OAuth only); hide or defer non-MVP providers unless user approves.
+
+## Figma MCP
+
+- Authenticated user: JC (`johnconstantine.acuesta.cics@ust.edu.ph`)
+- Prefer **Technovation Society** (Full seat) for MCP read/write — personal Starter/View team has severe rate limits (~6 reads/month).
+- To implement a screen: user provides a frame link, or agent uses `get_design_context` + `get_screenshot` on the node under Pages that matter.
+
+## Mobile onboarding (implemented)
+
+Expo app in `mobile/`. **Web preview for design check:** `preview/` (Vite + React).
+
+```bash
+cd preview && npm run dev
+```
+
+Flow: `/` welcome carousel → `/auth` → `/sign-in` or `/register` (placeholder) → `/done`.

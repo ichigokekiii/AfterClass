@@ -158,7 +158,7 @@ This section updates the founder wireframe flow (v2) and should drive the next w
 | 8 | Area and radius | Approximate area + max travel radius. |
 | 9 | Safety setup | Backup email and trusted contact. |
 | 10 | Discovery / swipe | Swipe left or right; school context on card. |
-| 11 | Match | Brief celebration; CTA to meetup plan. |
+| 11 | Match | Full-screen match moment with typewritten “Found a Match!” and a 30-second accept timer before discovery continues. |
 | 12 | Meetup proposal | Venue, slots, expiration, and accept flow. |
 | 13 | Safety consent | User opts into meetup-window location support for that date. |
 | 14 | Arrival check | Confirm arrival with proximity support. |
@@ -183,7 +183,7 @@ Supporting UI on the same screen:
 
 | State | Behavior |
 |------|----------|
-| Match just created | Meetup proposal first; no normal chat thread. |
+| Match just created | In-place match acceptance overlay first; user has 30 seconds to accept before returning to discovery. No normal chat thread. |
 | Meetup accepted | Date details are pinned; per-date safety consent is requested. |
 | Meetup window begins | Arrival prompt appears; safety tools become active. |
 | Suspicious movement or shake | User-first safety prompt or in-app emergency flow appears. |
@@ -243,9 +243,12 @@ Supporting UI on the same screen:
 
 - FR-MAT-1: Mutual likes create a match immediately.
 - FR-MAT-2: Match creation must emit analytics events for school-pair aggregation and post-match funnel tracking.
-- FR-MAT-3: The first post-match screen must emphasize the meetup suggestion flow rather than a chat thread.
-- FR-MAT-4: Every match must display a countdown until expiration on the meetup proposal screen. The MVP default expiration window is 48 hours from match creation unless changed by product policy.
-- FR-MAT-5: When a match expires without a mutually accepted meetup plan, the match must move to an expired state and disappear from active match lists.
+- FR-MAT-3: The first post-match moment must appear as an in-place full-screen match acceptance overlay rather than a separate chat thread or unrelated page transition.
+- FR-MAT-4: When a mutual match is detected, the app must show a typewritten “Found a Match!” message and an **Accept Match?** action with a visible 30-second fill timer. This gives users time to pause, review who they may meet in person, and confirm intentionally before moving forward.
+- FR-MAT-5: If the user does not accept within 30 seconds, the pending match must expire and the user must return to discovery without creating an active match.
+- FR-MAT-6: After the user accepts a match, the first post-match screen must emphasize the meetup suggestion flow rather than a chat thread.
+- FR-MAT-7: Every accepted match must display a countdown until expiration on the meetup proposal screen. The MVP default expiration window is 48 hours from match creation unless changed by product policy.
+- FR-MAT-8: When a match expires without a mutually accepted meetup plan, the match must move to an expired state and disappear from active match lists.
 
 ### Meetup recommendation engine
 
@@ -269,7 +272,7 @@ Supporting UI on the same screen:
 - FR-POST-3: Feedback prompts may vary by meetup outcome, such as completed, canceled, expired, or safety-flagged.
 - FR-POST-4: Users may add optional short text and may skip non-critical questions without losing access to discovery.
 - FR-POST-5: If a user reports a no-show, the platform must record a private internal no-show signal for trust, ranking, and moderation use only. It must not create a public badge.
-- FR-POST-6: After a completed meetup, the app must offer an optional off-platform continuation flow where users may choose whether to share supported social accounts or contact methods.
+- FR-POST-6: After a completed meetup, the app must offer an optional off-platform continuation flow where users may choose whether to share supported social accounts or contact methods. Social handles must not appear on discovery cards or pre-meetup profile detail views.
 - FR-POST-7: The MVP must not include a normal open-ended in-app one-to-one chat thread before or after match resolution.
 
 ### School compatibility insights and data pipeline
