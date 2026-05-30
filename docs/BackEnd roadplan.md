@@ -1,76 +1,67 @@
 # BackEnd Roadplan
 
 ## Summary
-- Build a realtime dating-app backend optimized for mobile devices and unstable 3G/4G networks.
-- Use a two-phase delivery model:
-  - **Phase A (1-week closed beta):** modular monolith, full core user flow.
-  - **Phase B (post-beta):** split into full microservices and harden for scale.
-- Core principle: **PostgreSQL is authoritative**, **Redis is ephemeral**.
+- Backend roadmap aligned to `docs/after-class-prd.md` (Draft v2, May 23, 2026).
+- Product is a **safety-first verified campus dating app** with meetup-first flow.
+- Core rule: **no normal in-app 1:1 chat in MVP**.
 
-## Locked Stack and Architecture
-- **Region:** Singapore (SEA-first).
-- **API style:** REST (`/api/v1`) + WebSocket.
-- **Runtime:** Go.
-- **Infra (managed):** App runtime, Postgres, Redis, object storage + CDN, managed L7 load balancer + WAF.
-- **Auth:** Managed IdP + internal auth facade.
-- **Location model:** Hybrid (precise internal; coarse external exposure).
+## MVP Product-Aligned Backend Scope
+- **Identity and onboarding**
+  - `.edu` verification (manual + Google OAuth using approved `.edu` account)
+  - face-to-profile authenticity verification
+  - age 18+ gating
+- **Profile and trust setup**
+  - profile, approximate area, travel radius, weekday availability, daytime windows
+  - backup email + trusted contact capture
+  - no-profile chooser (`Find People` / `Review a Friend`)
+- **Discovery and matching**
+  - swipe cards, mutual-like match creation
+  - 30-second in-place “Found a Match” acceptance timer
+  - match expiration rules
+- **Meetup engine**
+  - hybrid venue sourcing (approved venues + external places fallback)
+  - daytime-only meetup windows (8:00 AM to 6:00 PM)
+  - midpoint + radius overlap logic
+  - graceful failure when no safe valid venue exists
+- **Safety flows**
+  - per-date consent for meetup-window location usage
+  - arrival confirmation with proximity support
+  - shake emergency flow
+  - post-date safety check-ins (up to 24h policy window)
+  - trusted-contact escalation on no-response/danger signals
+- **Post-date and continuation**
+  - adaptive feedback
+  - internal no-show signal tracking
+  - optional off-platform continuation handoff
+- **Admin tooling**
+  - school/domain approval
+  - report moderation and account state control
+  - venue oversight
+  - school-compatibility oversight
+  - friend-review moderation
 
-## Phase A (Closed Beta in 1 Week)
-- **Deploy model:** modular monolith (domain-separated modules, single deployable).
-- **Required modules:**
-  - auth/session/device
-  - profiles + photo upload metadata (signed URLs)
-  - discovery feed + like/pass swipe
-  - mutual match creation
-  - 1:1 text chat + read receipts
-  - realtime WS events (message/match/read/presence essentials)
-  - push notifications
-  - safety baseline (block/report/rate limits)
-- **Definition of done:**
-  - End-to-end user journey works reliably.
-  - Safety enforcement works across discovery and chat.
-  - No critical auth/data-loss bugs.
-  - Health checks, logging, backup, and rollback basics are in place.
+## MVP Technical Stack (Execution Baseline)
+- **Runtime/API:** Go, REST (`/api/v1`)
+- **Data:** PostgreSQL authoritative, Redis ephemeral/cache/rate-limit
+- **Infra:** managed app runtime + Postgres + Redis + object storage/CDN + managed L7 LB + WAF
+- **Observability:** structured logs, metrics, traces, alerts
+- **Release:** closed beta, canary + rollback rules
 
-## Phase B (Post-Beta Full Backend)
-- Split into services:
-  - auth, profile, discovery, match, chat, realtime, notifications, trust-safety, billing, admin
-- Use Redis Streams + outbox pattern for async cross-domain events.
-- Maintain schema-per-service boundaries in Postgres.
-- Add premium billing live integration (store/webhook + entitlement reconciliation).
-- Expand moderation/admin tooling, reliability automation, and cost guardrails.
+## Locked Operational Defaults
+- Access token refresh cadence: every 15 minutes
+- Re-login horizon: ~30 days
+- Idempotency key retention: 24 hours
+- API errors: RFC7807 + `app_code` + `retryable` + optional `retry_after`
+- Conflict status: `409`
+- Discovery cache TTL: 30s
+- Presence TTL: 60s
+- Discovery p95 target: <=220ms
+- DR target: warm standby, RTO <=1h
+- Restore drills: monthly
 
-## Security and Reliability Defaults
-- **Access token refresh cadence:** every 15 minutes.
-- **Re-login horizon:** ~30 days.
-- **Idempotency key retention:** 24 hours.
-- **API error contract:** RFC7807 + `app_code` + `retryable` + optional `retry_after`.
-- **Conflict status:** `409`.
-- **DR target:** warm standby, RTO <= 1 hour.
-- **Restore drill cadence:** monthly.
-- **High-severity report SLA:** <24 hours.
-
-## Rate Limits and Redis TTLs
-- **Free right-swipes:** 60/day.
-- **Message send cap:** 20/min/user (matched chats).
-- **Presence TTL:** 60s.
-- **Typing TTL:** 8s.
-- **Discovery cache TTL:** 30s.
-
-## Performance and Release Defaults
-- **Discovery p95 latency target:** <=220ms.
-- **Release strategy:** canary + feature flags.
-- **Initial canary step:** 5%.
-- **Auto-rollback trigger:** error-rate + latency breach.
-- **Rollback breach window:** 5 minutes sustained.
-
-## Data and Retention Rules
-- **Postgres-only durable domains:** users, profiles, swipes, matches, conversations/messages, reports/blocks, notification logs, entitlements.
-- **Redis-only ephemeral domains:** cache, presence, typing, rate limits, stream/event buffers, dedupe keys.
-- **Message retention default:** 12 months.
-
-## Build Completion Gates
-- Functional journey passes: auth -> profile -> swipe/match -> chat -> push.
-- Safety controls pass: block/report/rate-limit behavior enforced.
-- Mobile reliability passes under high-latency/loss simulation.
-- Observability and rollback readiness validated before broad rollout.
+## Explicit PRD-Driven Constraints
+- No monetization in MVP (premium/billing out of scope).
+- No normal pre/post-match open chat thread in MVP.
+- No nighttime-first meetup behavior in MVP.
+- No always-on background tracking outside meetup windows.
+- No student-facing web app required for MVP.
