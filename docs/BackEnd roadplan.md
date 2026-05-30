@@ -123,3 +123,52 @@
 ## Notes on PRD Accuracy
 - This roadmap is accurate for **core backend planning** and explicitly keeps MVP PRD constraints.
 - For strict implementation-level traceability, the next document should enumerate endpoint/schema-level mappings for every FR item.
+
+## Build Execution Plan v1 (No Coding)
+
+### Summary
+- Convert the backend roadmap into an accountable execution schedule.
+- Use milestone gates with owner assignment, dates, and pass/fail criteria.
+- Preserve PRD constraints and current defaults as non-negotiable acceptance rules.
+
+### Milestones, Owners, and Dates
+- **M1 Contract Freeze (Day 1)**
+  - **Owner:** You (final decisions) + AI (draft artifacts)
+  - **Deliverables:** API/WS schema pack, DB schema/migration pack, Redis key/TTL + rate-limit matrix
+  - **Exit gate:** no unresolved contract ambiguities; all FR groups mapped
+- **M2 Core Domain Implementation Plan (Day 2–3)**
+  - **Owner:** AI drafts implementation tasks; You approve sequence and boundaries
+  - **Deliverables:** task breakdown for auth, onboarding, discovery, matching, meetup engine, safety primitives
+  - **Exit gate:** every task has input/output, dependency, and acceptance check
+- **M3 Realtime/Notification Plan (Day 4)**
+  - **Owner:** AI primary, You validate behavior
+  - **Deliverables:** WS lifecycle spec, reconnect/resume rules, push flow and retries, failure handling
+  - **Exit gate:** event contracts and retry semantics are decision-complete
+- **M4 Admin/Ops Hardening Plan (Day 5)**
+  - **Owner:** You define operational thresholds; AI structures runbooks/checklists
+  - **Deliverables:** moderation/admin API coverage, alert matrix, rollback triggers, DR/backup runbooks
+  - **Exit gate:** incident response and rollback paths are fully documented
+- **M5 Launch Readiness Review (Day 6–7)**
+  - **Owner:** You (go/no-go) with AI-generated audit report
+  - **Deliverables:** readiness checklist, unresolved risks list, closed-beta go-live criteria
+  - **Exit gate:** all critical items pass; only accepted non-critical risks remain
+
+### Pass/Fail Criteria by Stage
+- **Contract completeness:** all PRD FR groups map to API + DB + events, with no TBD fields.
+- **Behavior completeness:** verify/onboard/discover/match/meetup/safety/post-date paths fully specified.
+- **Safety completeness:** block/report/escalation/consent/retention rules explicitly locked.
+- **Ops completeness:** canary, rollback, monitoring, and DR targets have measurable thresholds.
+- **Readiness completeness:** each unresolved item has owner, due date, and risk rating.
+
+### Risk Register and Fallbacks
+- **R1: Scope creep** -> freeze MVP change window; defer non-critical features to post-beta.
+- **R2: Contract churn** -> no schema/API edits after M1 without explicit change request.
+- **R3: Safety ambiguity** -> default to stricter policy and PRD safety wording.
+- **R4: Realtime complexity** -> degrade gracefully to polling for non-critical updates if needed.
+- **R5: Launch instability** -> enforce canary + automatic rollback thresholds before expanding traffic.
+
+### Locked Assumptions
+- MVP remains meetup-first and excludes normal in-app chat thread.
+- Monetization stays out of MVP launch scope.
+- PostgreSQL is authoritative; Redis is ephemeral.
+- Single-region SEA closed beta is the first ship target.
